@@ -59,7 +59,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Hide message after 5 seconds
         setTimeout(function() {
-            formMessage.style.display = 'none';
             formMessage.className = 'form-message';
         }, 5000);
     }
