@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ソフトボールチーム ホームページ</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <nav class="navbar">
+            <div class="container">
+                <h1 class="logo">ソフトボールチーム</h1>
+                <ul class="nav-menu">
+                    <li><a href="#home">ホーム</a></li>
+                    <li><a href="#schedule">年間予定</a></li>
+                    <li><a href="#results">試合成績</a></li>
+                    <li><a href="#contact">お問い合わせ</a></li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <!-- Hero Section -->
+        <section id="home" class="hero">
+            <div class="container">
+                <h2>ようこそ！</h2>
+                <p>私たちのソフトボールチームのホームページへ</p>
+            </div>
+        </section>
+
+        <!-- Schedule Section -->
+        <section id="schedule" class="schedule">
+            <div class="container">
+                <h2>年間予定</h2>
+                <div class="schedule-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>日付</th>
+                                <th>イベント</th>
+                                <th>場所</th>
+                                <th>時間</th>
+                            </tr>
+                        </thead>
+                        <tbody id="schedule-body">
+                            <tr>
+                                <td>2026年3月15日</td>
+                                <td>春季練習開始</td>
+                                <td>市民グラウンド</td>
+                                <td>9:00 - 12:00</td>
+                            </tr>
+                            <tr>
+                                <td>2026年4月10日</td>
+                                <td>練習試合</td>
+                                <td>県立スポーツセンター</td>
+                                <td>13:00 - 17:00</td>
+                            </tr>
+                            <tr>
+                                <td>2026年5月5日</td>
+                                <td>地区大会</td>
+                                <td>総合運動公園</td>
+                                <td>8:00 - 18:00</td>
+                            </tr>
+                            <tr>
+                                <td>2026年6月20日</td>
+                                <td>県大会予選</td>
+                                <td>県営球場</td>
+                                <td>9:00 - 17:00</td>
+                            </tr>
+                            <tr>
+                                <td>2026年7月25日</td>
+                                <td>夏季合宿</td>
+                                <td>山の家研修所</td>
+                                <td>終日</td>
+                            </tr>
+                            <tr>
+                                <td>2026年8月15日</td>
+                                <td>県大会決勝トーナメント</td>
+                                <td>県営球場</td>
+                                <td>8:00 - 18:00</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- Results Section -->
+        <section id="results" class="results">
+            <div class="container">
+                <h2>試合成績</h2>
+                <div class="results-grid">
+                    <div class="result-card">
+                        <div class="result-header">
+                            <span class="result-date">2026年2月10日</span>
+                            <span class="result-status win">勝利</span>
+                        </div>
+                        <div class="result-score">
+                            <div class="team">
+                                <span class="team-name">我がチーム</span>
+                                <span class="score">8</span>
+                            </div>
+                            <div class="vs">VS</div>
+                            <div class="team">
+                                <span class="team-name">相手チーム A</span>
+                                <span class="score">3</span>
+                            </div>
+                        </div>
+                        <div class="result-location">場所: 市民グラウンド</div>
+                    </div>
+
+                    <div class="result-card">
+                        <div class="result-header">
+                            <span class="result-date">2026年1月28日</span>
+                            <span class="result-status win">勝利</span>
+                        </div>
+                        <div class="result-score">
+                            <div class="team">
+                                <span class="team-name">我がチーム</span>
+                                <span class="score">6</span>
+                            </div>
+                            <div class="vs">VS</div>
+                            <div class="team">
+                                <span class="team-name">相手チーム B</span>
+                                <span class="score">5</span>
+                            </div>
+                        </div>
+                        <div class="result-location">場所: 県立スポーツセンター</div>
+                    </div>
+
+                    <div class="result-card">
+                        <div class="result-header">
+                            <span class="result-date">2026年1月15日</span>
+                            <span class="result-status loss">敗北</span>
+                        </div>
+                        <div class="result-score">
+                            <div class="team">
+                                <span class="team-name">我がチーム</span>
+                                <span class="score">4</span>
+                            </div>
+                            <div class="vs">VS</div>
+                            <div class="team">
+                                <span class="team-name">相手チーム C</span>
+                                <span class="score">7</span>
+                            </div>
+                        </div>
+                        <div class="result-location">場所: 総合運動公園</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section id="contact" class="contact">
+            <div class="container">
+                <h2>お問い合わせ</h2>
+                <form id="contact-form" class="contact-form">
+                    <div class="form-group">
+                        <label for="name">お名前 *</label>
+                        <input type="text" id="name" name="name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">メールアドレス *</label>
+                        <input type="email" id="email" name="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="subject">件名 *</label>
+                        <input type="text" id="subject" name="subject" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="message">メッセージ *</label>
+                        <textarea id="message" name="message" rows="5" required></textarea>
+                    </div>
+                    <button type="submit" class="submit-btn">送信</button>
+                </form>
+                <div id="form-message" class="form-message"></div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2026 ソフトボールチーム. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
