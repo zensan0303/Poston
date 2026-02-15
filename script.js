@@ -57,7 +57,8 @@ document.addEventListener('DOMContentLoaded', function() {
         formMessage.textContent = message;
         formMessage.className = 'form-message ' + type;
 
-        // Hide message after 5 seconds
+        // Hide message after 5 seconds by removing the type class
+        // This returns to the base .form-message class which has display: none
         setTimeout(function() {
             formMessage.className = 'form-message';
         }, 5000);
@@ -87,7 +88,7 @@ window.addEventListener('scroll', function() {
     sections.forEach(section => {
         const sectionTop = section.offsetTop;
         const sectionHeight = section.clientHeight;
-        if (window.pageYOffset >= sectionTop - 100) {
+        if (window.scrollY >= sectionTop - 100) {
             current = section.getAttribute('id');
         }
     });

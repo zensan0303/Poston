@@ -283,6 +283,10 @@ tbody tr:hover {
     background-color: #2980b9;
 }
 
+/* Form message visibility toggle pattern:
+ * Base .form-message class has display: none
+ * .success and .error classes set display: block to show the message
+ */
 .form-message {
     margin-top: 1rem;
     padding: 1rem;
