@@ -1,0 +1,68 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --primary-blue: #0088bb;
+  --primary-blue-dark: #006f9c;
+  --background: #ffffff;
+  --foreground: #1a1a1a;
+  color-scheme: light; /* ダークモード無効化 */
+}
+
+body {
+  color: var(--foreground);
+  background: var(--background);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
+
+/* React Big Calendar用のスタイル */
+.rbc-calendar {
+  font-size: 1rem;
+}
+
+.rbc-header {
+  padding: 10px 5px;
+  font-weight: bold;
+  font-size: 1.1rem;
+  background-color: #e6f7ff;
+  color: #1a1a1a;
+}
+
+.rbc-today {
+  background-color: #b3e8ff;
+}
+
+.rbc-event {
+  background-color: #0088bb;
+  border-radius: 5px;
+  padding: 2px 5px;
+  font-size: 0.95rem;
+  color: #ffffff;
+}
+
+.rbc-event:hover {
+  background-color: #006f9c;
+}
+
+/* モバイル向けの大きめのタップターゲット */
+@media (max-width: 768px) {
+  button, a {
+    min-height: 44px;
+    min-width: 44px;
+  }
+  
+  .rbc-header {
+    font-size: 1rem;
+  }
+  
+  .rbc-event {
+    font-size: 0.85rem;
+  }
+}
