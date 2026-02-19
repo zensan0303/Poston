@@ -1,10 +1,8 @@
-import { initializeApp, getApps } from 'firebase/app';
-import { getAuth } from 'firebase/auth';
-import { getFirestore } from 'firebase/firestore';
-import { getStorage } from 'firebase/storage';
+import { initializeApp, getApps, FirebaseApp } from 'firebase/app';
+import { getAuth, Auth } from 'firebase/auth';
+import { getFirestore, Firestore } from 'firebase/firestore';
+import { getStorage, FirebaseStorage } from 'firebase/storage';
 
-// Firebaseの設定
-// 本番環境では環境変数を使用してください
 const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
   authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
@@ -14,22 +12,35 @@ const firebaseConfig = {
   appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
 };
 
-// デバッグ：環境変数が設定されているか確認
-if (!firebaseConfig.projectId) {
-  console.error('⚠️ Firebase環境変数が設定されていません。.env.local ファイルを確認してください。');
+// 遅延初期化（ブラウザ上でのみ実行・ビルド時の静的生成で走らない）
+let app: FirebaseApp | null = null;
+let db: Firestore | null = null;
+let auth: Auth | null = null;
+let storage: FirebaseStorage | null = null;
+
+function getApp(): FirebaseApp {
+  if (!app) {
+    if (!firebaseConfig.projectId) {
+      throw new Error('Firebase環境変数が設定されていません。');
+    }
+    app = !getApps().length ? initializeApp(firebaseConfig) : getApps()[0];
+  }
+  return app;
 }
 
-// Firebaseアプリの初期化（重複初期化を防ぐ）
-const app = !getApps().length ? initializeApp(firebaseConfig) : getApps()[0];
+export function getDbInstance(): Firestore {
+  if (!db) db = getFirestore(getApp());
+  return db;
+}
 
-// Firebase instances
-export const db = getFirestore(app);
-export const auth = getAuth(app);
-export const storage = getStorage(app);
+export function getAuthInstance(): Auth {
+  if (!auth) auth = getAuth(getApp());
+  return auth;
+}
 
-// Lazy initialization helpers
-export const getDbInstance = () => db;
-export const getAuthInstance = () => auth;
-export const getStorageInstance = () => storage;
+export function getStorageInstance(): FirebaseStorage {
+  if (!storage) storage = getStorage(getApp());
+  return storage;
+}
 
-export default app;
+export default getApp;

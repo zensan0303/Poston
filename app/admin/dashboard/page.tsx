@@ -97,6 +97,19 @@ export default function AdminDashboard() {
               </p>
             </div>
           </Link>
+
+          {/* お知らせバナー管理カード */}
+          <Link href="/admin/announcement">
+            <div className="bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition-shadow cursor-pointer border-2 border-primary-200 hover:border-primary-500">
+              <div className="text-5xl mb-4 text-center">📢</div>
+              <h2 className="text-2xl-mobile font-bold text-center mb-2 text-primary-700">
+                お知らせバナー
+              </h2>
+              <p className="text-center text-gray-600 text-lg">
+                トップページの流れる帯を編集
+              </p>
+            </div>
+          </Link>
         </div>
 
         {/* 注意書き */}

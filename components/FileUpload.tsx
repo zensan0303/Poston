@@ -2,7 +2,7 @@
 
 import { useState, ChangeEvent } from 'react';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
-import { storage } from '@/lib/firebase';
+import { getStorageInstance } from '@/lib/firebase';
 
 interface FileUploadProps {
   onUploadComplete: (url: string, fileName: string, fileSize: number) => void;
@@ -39,7 +39,7 @@ export default function FileUpload({
       // ファイル名にタイムスタンプを追加してユニークにする
       const timestamp = Date.now();
       const fileName = `${timestamp}_${file.name}`;
-      const storageRef = ref(storage, `attachments/${fileName}`);
+      const storageRef = ref(getStorageInstance(), `attachments/${fileName}`);
 
       // ファイルをアップロード
       await uploadBytes(storageRef, file);

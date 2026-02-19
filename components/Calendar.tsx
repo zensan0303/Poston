@@ -64,6 +64,37 @@ const calendarStyles = `
   .rbc-time-view .rbc-day-weekend {
     background-color: #fff5f5 !important;
   }
+  /* モバイル：月末6行でも見切れないよう行の最小高さを確保 */
+  .rbc-month-row {
+    min-height: 56px;
+    overflow: visible;
+  }
+  /* +N件ボタンをタップしやすく */
+  .rbc-show-more {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #0284c7;
+    padding: 1px 4px;
+    background: #e0f2fe;
+    border-radius: 4px;
+    margin-top: 1px;
+    display: block;
+  }
+  /* ポップアップを見やすく */
+  .rbc-overlay {
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.18);
+    border: none;
+    padding: 8px;
+    z-index: 9999;
+  }
+  .rbc-overlay-header {
+    font-size: 1rem;
+    font-weight: 700;
+    padding: 6px 8px;
+    border-bottom: 2px solid #e2e8f0;
+    margin-bottom: 4px;
+  }
 `;
 
 // 日本の祝日を判定する関数
@@ -228,7 +259,7 @@ export default function Calendar({ events, onSelectEvent, onSelectSlot }: Calend
       </div>
       
       {/* カレンダー本体 */}
-      <div className="h-[400px] md:h-[600px] p-2 md:p-4 overflow-auto">
+      <div className="h-[520px] md:h-[600px] p-2 md:p-4 overflow-auto">
         <BigCalendar
           localizer={localizer}
           events={events}
@@ -237,6 +268,7 @@ export default function Calendar({ events, onSelectEvent, onSelectSlot }: Calend
           onSelectEvent={handleSelectEvent}
           onSelectSlot={handleSelectSlot}
           selectable
+          popup
           view={view}
           onView={setView}
           date={date}

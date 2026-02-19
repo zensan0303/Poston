@@ -5,6 +5,7 @@ import { collection, getDocs, query, orderBy, limit } from 'firebase/firestore';
 import { getDbInstance } from '@/lib/firebase';
 import Calendar from '@/components/Calendar';
 import EventModal from '@/components/EventModal';
+import MarqueeBanner from '@/components/MarqueeBanner';
 import Link from 'next/link';
 import { Event } from '@/types';
 
@@ -142,6 +143,9 @@ export default function Home() {
         )}
       </header>
 
+      {/* お知らせバナー */}
+      <MarqueeBanner />
+
       {/* メインコンテンツ */}
       <main className="max-w-6xl mx-auto p-4 md:p-8">
         <h2 className="text-2xl-mobile md:text-3xl font-bold mb-4 text-center text-gray-800">
@@ -151,12 +155,7 @@ export default function Home() {
         {/* エラー表示 */}
         {error && (
           <div className="mb-6 bg-orange-50 border-l-4 border-orange-500 p-4 rounded">
-            <p className="text-lg text-orange-700">
-              {error}
-            </p>
-            <p className="text-sm text-orange-600 mt-2">
-              デモデータを表示しています。
-            </p>
+            <p className="text-lg text-orange-700">{error}</p>
           </div>
         )}
 
