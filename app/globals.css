@@ -55,7 +55,6 @@ body {
 @media (max-width: 768px) {
   button, a {
     min-height: 44px;
-    min-width: 44px;
   }
   
   .rbc-header {

@@ -44,9 +44,6 @@ export default function AdminLoginPage() {
             <h1 className="text-3xl-mobile font-bold text-gray-800 mb-2">
               🔐 管理者ログイン
             </h1>
-            <p className="text-lg text-gray-600">
-              予定や試合結果を管理します
-            </p>
           </div>
 
           {error && (
