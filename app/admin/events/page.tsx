@@ -127,73 +127,53 @@ export default function EventsManagement() {
             </Link>
           </div>
         ) : (
-          <div className="bg-white rounded-lg shadow-lg overflow-hidden">
-            <div className="overflow-x-auto">
-              <table className="w-full">
-                <thead className="bg-primary-500 text-white">
-                  <tr>
-                    <th className="px-4 py-3 text-left">タイトル</th>
-                    <th className="px-4 py-3 text-left">種類</th>
-                    <th className="px-4 py-3 text-left">開始日時</th>
-                    <th className="px-4 py-3 text-left">終了日時</th>
-                    <th className="px-4 py-3 text-left">場所</th>
-                    <th className="px-4 py-3 text-center">操作</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {events.map((event, index) => (
-                    <tr
-                      key={event.id}
-                      className={index % 2 === 0 ? 'bg-white' : 'bg-gray-50'}
-                    >
-                      <td className="px-4 py-3 font-bold text-primary-700">
-                        {event.title}
-                      </td>
-                      <td className="px-4 py-3">
-                        <span
-                          className={`px-3 py-1 rounded text-sm font-bold text-white ${
-                            event.type === 'practice'
-                              ? 'bg-blue-500'
-                              : event.type === 'game'
-                              ? 'bg-red-500'
-                              : 'bg-gray-500'
-                          }`}
-                        >
-                          {event.type === 'practice'
-                            ? '練習'
-                            : event.type === 'game'
-                            ? '試合'
-                            : 'その他'}
-                        </span>
-                      </td>
-                      <td className="px-4 py-3">
-                        {event.start.toLocaleString('ja-JP')}
-                      </td>
-                      <td className="px-4 py-3">
-                        {event.end.toLocaleString('ja-JP')}
-                      </td>
-                      <td className="px-4 py-3">{event.location}</td>
-                      <td className="px-4 py-3 text-center">
-                        <div className="flex gap-2 justify-center">
-                          <Link
-                            href={`/admin/events/${event.id}`}
-                            className="bg-blue-500 text-white px-3 py-1 rounded font-bold hover:bg-blue-600 transition-colors text-sm"
-                          >
-                            編集
-                          </Link>
-                          <button
-                            onClick={() => handleDelete(event.id)}
-                            className="bg-red-500 text-white px-3 py-1 rounded font-bold hover:bg-red-600 transition-colors text-sm"
-                          >
-                            削除
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+          <div className="space-y-3">
+            {events.map((event) => (
+              <div
+                key={event.id}
+                className="bg-white rounded-xl shadow-md p-4 border-l-4 border-primary-400"
+              >
+                <div className="flex items-start justify-between gap-2 mb-2">
+                  <span className="text-lg font-bold text-primary-700 leading-tight">
+                    {event.title}
+                  </span>
+                  <span
+                    className={`shrink-0 px-3 py-1 rounded-full text-sm font-bold text-white ${
+                      event.type === 'practice'
+                        ? 'bg-blue-500'
+                        : event.type === 'game'
+                        ? 'bg-red-500'
+                        : 'bg-gray-500'
+                    }`}
+                  >
+                    {event.type === 'practice'
+                      ? '練習'
+                      : event.type === 'game'
+                      ? '試合'
+                      : 'その他'}
+                  </span>
+                </div>
+                <div className="text-sm text-gray-600 space-y-0.5 mb-3">
+                  <p>🕐 開始：{event.start.toLocaleString('ja-JP', { month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit' })}</p>
+                  <p>🕐 終了：{event.end.toLocaleString('ja-JP', { month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit' })}</p>
+                  {event.location && <p>📍 {event.location}</p>}
+                </div>
+                <div className="flex gap-2">
+                  <Link
+                    href={`/admin/events/${event.id}`}
+                    className="flex-1 text-center bg-blue-500 text-white py-2 rounded-lg font-bold hover:bg-blue-600 transition-colors text-sm"
+                  >
+                    ✏️ 編集
+                  </Link>
+                  <button
+                    onClick={() => handleDelete(event.id)}
+                    className="flex-1 bg-red-500 text-white py-2 rounded-lg font-bold hover:bg-red-600 transition-colors text-sm"
+                  >
+                    🗑️ 削除
+                  </button>
+                </div>
+              </div>
+            ))}
           </div>
         )}
 

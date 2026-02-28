@@ -127,26 +127,32 @@ export default function AnnouncementAdmin() {
           </div>
 
           {/* 表示・非表示トグル */}
-          <div className="flex items-center gap-4">
-            <span className="text-xl font-bold text-gray-700">バナーを表示する</span>
-            <button
-              type="button"
-              role="switch"
-              aria-checked={isVisible}
-              onClick={() => setIsVisible(!isVisible)}
-              className={`relative inline-flex h-7 w-14 shrink-0 rounded-full transition-colors duration-300 focus:outline-none ${
-                isVisible ? 'bg-primary-500' : 'bg-gray-300'
-              }`}
-            >
-              <span
-                className={`absolute top-0.5 left-0.5 h-6 w-6 rounded-full bg-white shadow transition-transform duration-300 ${
-                  isVisible ? 'translate-x-7' : 'translate-x-0'
+          <div>
+            <p className="text-xl font-bold text-gray-700 mb-3">バナーの表示設定</p>
+            <div className="flex gap-3">
+              <button
+                type="button"
+                onClick={() => setIsVisible(true)}
+                className={`flex-1 py-3 rounded-xl text-lg font-bold border-2 transition-colors ${
+                  isVisible
+                    ? 'bg-primary-500 text-white border-primary-500'
+                    : 'bg-white text-gray-400 border-gray-200'
                 }`}
-              />
-            </button>
-            <span className={`text-lg font-semibold ${isVisible ? 'text-primary-600' : 'text-gray-400'}`}>
-              {isVisible ? '表示中' : '非表示'}
-            </span>
+              >
+                ✅ 表示する
+              </button>
+              <button
+                type="button"
+                onClick={() => setIsVisible(false)}
+                className={`flex-1 py-3 rounded-xl text-lg font-bold border-2 transition-colors ${
+                  !isVisible
+                    ? 'bg-gray-500 text-white border-gray-500'
+                    : 'bg-white text-gray-400 border-gray-200'
+                }`}
+              >
+                🚫 非表示
+              </button>
+            </div>
           </div>
 
           {/* 保存ボタン */}

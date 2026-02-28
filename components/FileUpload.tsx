@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, ChangeEvent } from 'react';
-import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
 import { getStorageInstance } from '@/lib/firebase';
 
 interface FileUploadProps {
@@ -36,28 +36,52 @@ export default function FileUpload({
     setProgress(0);
 
     try {
-      // ファイル名にタイムスタンプを追加してユニークにする
       const timestamp = Date.now();
       const fileName = `${timestamp}_${file.name}`;
       const storageRef = ref(getStorageInstance(), `attachments/${fileName}`);
 
-      // ファイルをアップロード
-      await uploadBytes(storageRef, file);
-      
-      // ダウンロードURLを取得
-      const downloadURL = await getDownloadURL(storageRef);
-      
-      setProgress(100);
-      onUploadComplete(downloadURL, file.name, file.size);
-      
-      // リセット
+      await new Promise<void>((resolve, reject) => {
+        const uploadTask = uploadBytesResumable(storageRef, file);
+
+        uploadTask.on(
+          'state_changed',
+          (snapshot) => {
+            const pct = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
+            setProgress(pct);
+          },
+          (err) => {
+            console.error('アップロードエラー:', err.code, err.message);
+            switch (err.code) {
+              case 'storage/unauthorized':
+                reject(new Error('権限エラー: Firebase Storage のルールで書き込みが拒否されました'));
+                break;
+              case 'storage/canceled':
+                reject(new Error('アップロードがキャンセルされました'));
+                break;
+              default:
+                reject(new Error(`アップロードに失敗しました (${err.code})`));
+            }
+          },
+          async () => {
+            try {
+              const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
+              onUploadComplete(downloadURL, file.name, file.size);
+              resolve();
+            } catch (urlErr) {
+              reject(urlErr);
+            }
+          }
+        );
+      });
+
       e.target.value = '';
     } catch (err) {
       console.error('アップロードエラー:', err);
-      setError('ファイルのアップロードに失敗しました');
+      const msg = err instanceof Error ? err.message : 'ファイルのアップロードに失敗しました';
+      setError(msg);
     } finally {
       setUploading(false);
-      setTimeout(() => setProgress(0), 1000);
+      setTimeout(() => setProgress(0), 1500);
     }
   };
 
@@ -86,16 +110,22 @@ export default function FileUpload({
           />
         </label>
         {uploading && (
-          <span className="text-lg text-gray-600">アップロード中...</span>
+          <span className="text-lg text-gray-600">アップロード中... {progress}%</span>
         )}
       </div>
 
-      {progress > 0 && progress < 100 && (
+      {uploading && (
         <div className="w-full bg-gray-200 rounded-full h-3">
           <div
             className="bg-primary-500 h-3 rounded-full transition-all duration-300"
             style={{ width: `${progress}%` }}
           />
+        </div>
+      )}
+
+      {!uploading && progress === 100 && (
+        <div className="w-full bg-gray-200 rounded-full h-3">
+          <div className="bg-green-500 h-3 rounded-full w-full transition-all duration-300" />
         </div>
       )}
 

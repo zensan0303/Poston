@@ -80,7 +80,7 @@ export default function Home() {
       {/* ヘッダー */}
       <header className="bg-primary-500 text-white p-4 md:p-6 shadow-lg">
         <div className="max-w-6xl mx-auto flex items-center justify-between">
-          <h1 className="text-2xl-mobile md:text-3xl font-bold">
+          <h1 className="text-2xl-mobile md:text-3xl font-bold whitespace-nowrap">
             ⚾ ポストン
           </h1>
           
@@ -160,18 +160,18 @@ export default function Home() {
         )}
 
         {/* 凡例 */}
-        <div className="mb-6 flex flex-wrap gap-4 justify-center">
-          <div className="flex items-center gap-2">
-            <div className="w-4 h-4 bg-[#00bfff] rounded"></div>
-            <span className="text-lg">練習</span>
+        <div className="mb-6 flex flex-wrap gap-3 justify-center">
+          <div className="flex items-center gap-2 whitespace-nowrap">
+            <div className="w-4 h-4 bg-[#00bfff] rounded flex-shrink-0"></div>
+            <span className="text-base md:text-lg">練習</span>
           </div>
-          <div className="flex items-center gap-2">
-            <div className="w-4 h-4 bg-[#ff6b6b] rounded"></div>
-            <span className="text-lg">試合</span>
+          <div className="flex items-center gap-2 whitespace-nowrap">
+            <div className="w-4 h-4 bg-[#ff6b6b] rounded flex-shrink-0"></div>
+            <span className="text-base md:text-lg">試合</span>
           </div>
-          <div className="flex items-center gap-2">
-            <div className="w-4 h-4 bg-[#868e96] rounded"></div>
-            <span className="text-lg">その他</span>
+          <div className="flex items-center gap-2 whitespace-nowrap">
+            <div className="w-4 h-4 bg-[#868e96] rounded flex-shrink-0"></div>
+            <span className="text-base md:text-lg">その他</span>
           </div>
         </div>
 

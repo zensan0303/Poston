@@ -218,15 +218,15 @@ export default function Calendar({ events, onSelectEvent, onSelectSlot }: Calend
       <style>{calendarStyles}</style>
       <div className="bg-white rounded-xl shadow-xl overflow-hidden border border-gray-100">
       {/* カレンダーヘッダー */}
-      <div className="bg-gradient-to-r from-primary-500 to-primary-600 text-white p-4 md:p-6">
-        <div className="flex items-center justify-between flex-wrap gap-4">
-          <h3 className="text-xl md:text-2xl font-bold flex items-center gap-2">
+      <div className="bg-gradient-to-r from-primary-500 to-primary-600 text-white p-3 md:p-6">
+        <div className="flex items-center justify-between gap-2">
+          <h3 className="text-base md:text-2xl font-bold flex items-center gap-1 whitespace-nowrap">
             📅 {view === 'month' ? '月間' : view === 'week' ? '週間' : '日間'}
           </h3>
-          <div className="flex gap-2">
+          <div className="flex gap-1 md:gap-2 flex-shrink-0">
             <button
               onClick={() => setView('month')}
-              className={`px-3 py-1 rounded-lg font-bold transition-all ${
+              className={`px-3 py-1.5 rounded-lg font-bold transition-all text-sm md:text-base ${
                 view === 'month'
                   ? 'bg-white text-primary-600 shadow-md'
                   : 'bg-primary-700 text-white hover:bg-primary-800'
@@ -236,7 +236,7 @@ export default function Calendar({ events, onSelectEvent, onSelectSlot }: Calend
             </button>
             <button
               onClick={() => setView('week')}
-              className={`px-3 py-1 rounded-lg font-bold transition-all ${
+              className={`px-3 py-1.5 rounded-lg font-bold transition-all text-sm md:text-base ${
                 view === 'week'
                   ? 'bg-white text-primary-600 shadow-md'
                   : 'bg-primary-700 text-white hover:bg-primary-800'
@@ -246,7 +246,7 @@ export default function Calendar({ events, onSelectEvent, onSelectSlot }: Calend
             </button>
             <button
               onClick={() => setView('day')}
-              className={`px-3 py-1 rounded-lg font-bold transition-all ${
+              className={`px-3 py-1.5 rounded-lg font-bold transition-all text-sm md:text-base ${
                 view === 'day'
                   ? 'bg-white text-primary-600 shadow-md'
                   : 'bg-primary-700 text-white hover:bg-primary-800'
@@ -291,8 +291,8 @@ export default function Calendar({ events, onSelectEvent, onSelectSlot }: Calend
       </div>
 
       {/* 前後の予定ナビゲーション */}
-      <div className="border-t border-gray-200 p-4 bg-gray-50">
-        <div className="flex gap-3 justify-between">
+      <div className="border-t border-gray-200 p-3 md:p-4 bg-gray-50">
+        <div className="flex gap-2 justify-between">
           <button
             onClick={() => {
               const newDate = new Date(date);
@@ -301,13 +301,13 @@ export default function Calendar({ events, onSelectEvent, onSelectSlot }: Calend
               else newDate.setDate(newDate.getDate() - 1);
               setDate(newDate);
             }}
-            className="flex-1 bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700 text-white font-bold py-3 px-4 rounded-lg transition-all shadow-md text-lg"
+            className="flex-1 bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700 text-white font-bold py-3 px-2 md:px-4 rounded-lg transition-all shadow-md text-sm md:text-lg whitespace-nowrap"
           >
-            ← 前の予定
+            ← 前へ
           </button>
           <button
             onClick={() => setDate(new Date())}
-            className="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold py-3 px-4 rounded-lg transition-all shadow-md text-lg"
+            className="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold py-3 px-2 md:px-4 rounded-lg transition-all shadow-md text-sm md:text-lg whitespace-nowrap"
           >
             今日
           </button>
@@ -319,9 +319,9 @@ export default function Calendar({ events, onSelectEvent, onSelectSlot }: Calend
               else newDate.setDate(newDate.getDate() + 1);
               setDate(newDate);
             }}
-            className="flex-1 bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700 text-white font-bold py-3 px-4 rounded-lg transition-all shadow-md text-lg"
+            className="flex-1 bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700 text-white font-bold py-3 px-2 md:px-4 rounded-lg transition-all shadow-md text-sm md:text-lg whitespace-nowrap"
           >
-            次の予定 →
+            次へ →
           </button>
         </div>
       </div>

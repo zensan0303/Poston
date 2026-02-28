@@ -5,7 +5,10 @@ import { useRouter, useParams } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
 import Link from 'next/link';
 import { doc, getDoc, updateDoc, serverTimestamp } from 'firebase/firestore';
-import { getDbInstance } from '@/lib/firebase';
+import { ref, deleteObject } from 'firebase/storage';
+import { getDbInstance, getStorageInstance } from '@/lib/firebase';
+import FileUpload from '@/components/FileUpload';
+import { Attachment } from '@/types';
 
 interface EventData {
   title: string;
@@ -23,6 +26,7 @@ export default function EditEvent() {
   const eventId = params.eventId as string;
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [attachments, setAttachments] = useState<Attachment[]>([]);
   const [formData, setFormData] = useState<EventData>({
     title: '',
     description: '',
@@ -59,6 +63,19 @@ export default function EditEvent() {
           start: data.start.toDate(),
           end: data.end.toDate(),
         });
+        // 添付ファイルを読み込む
+        if (data.attachments && Array.isArray(data.attachments)) {
+          setAttachments(data.attachments.map((att: Attachment) => {
+            const ts = att.uploadedAt as unknown;
+            const uploadedAt =
+              typeof (ts as { toDate?: unknown }).toDate === 'function'
+                ? (ts as { toDate: () => Date }).toDate()
+                : ts instanceof Date
+                ? ts
+                : new Date();
+            return { ...att, uploadedAt };
+          }));
+        }
       } else {
         alert('予定が見つかりません');
         router.push('/admin/events');
@@ -75,10 +92,44 @@ export default function EditEvent() {
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
   ) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: name === 'start' || name === 'end' ? new Date(value) : value,
-    }));
+    if (name === 'start' || name === 'end') {
+      const [datePart, timePart] = value.split('T');
+      const [year, month, day] = datePart.split('-').map(Number);
+      const [hour, minute] = timePart.split(':').map(Number);
+      const localDate = new Date(year, month - 1, day, hour, minute, 0, 0);
+      setFormData(prev => ({ ...prev, [name]: localDate }));
+    } else {
+      setFormData(prev => ({ ...prev, [name]: value }));
+    }
+  };
+
+  // 添付ファイル追加
+  const handleFileUploadComplete = (url: string, fileName: string, fileSize: number) => {
+    const newAttachment: Attachment = {
+      id: Date.now().toString(),
+      name: fileName,
+      url,
+      type: fileName.split('.').pop() || 'file',
+      size: fileSize,
+      uploadedAt: new Date(),
+    };
+    setAttachments(prev => [...prev, newAttachment]);
+  };
+
+  // 添付ファイル削除（StorageからもFirestoreからも即削除）
+  const handleRemoveAttachment = async (att: Attachment) => {
+    if (!confirm(`「${att.name}」を削除しますか？`)) return;
+    try {
+      // Storage からファイルを削除（URL からパスを抽出）
+      const url = new URL(att.url);
+      const pathMatch = url.pathname.match(/\/o\/(.+)/);
+      if (pathMatch) {
+        const storagePath = decodeURIComponent(pathMatch[1].split('?')[0]);
+        const storageRef = ref(getStorageInstance(), storagePath);
+        await deleteObject(storageRef).catch(() => {/* すでに削除済みは無視 */});
+      }
+    } catch {/* Storage削除失敗は無視してリストからは除去 */}
+    setAttachments(prev => prev.filter(a => a.id !== att.id));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -94,6 +145,7 @@ export default function EditEvent() {
         type: formData.type,
         start: formData.start,
         end: formData.end,
+        attachments: attachments,
         updatedAt: serverTimestamp(),
       });
 
@@ -119,8 +171,18 @@ export default function EditEvent() {
     return null;
   }
 
-  const startStr = formData.start.toISOString().slice(0, 16);
-  const endStr = formData.end.toISOString().slice(0, 16);
+  // toISOString()はUTCを返すため9時間ズレる → ローカル時刻で文字列を生成
+  const toLocalDateTimeString = (date: Date) => {
+    const y = date.getFullYear();
+    const mo = String(date.getMonth() + 1).padStart(2, '0');
+    const d = String(date.getDate()).padStart(2, '0');
+    const h = String(date.getHours()).padStart(2, '0');
+    const mi = String(date.getMinutes()).padStart(2, '0');
+    return `${y}-${mo}-${d}T${h}:${mi}`;
+  };
+
+  const startStr = toLocalDateTimeString(formData.start);
+  const endStr = toLocalDateTimeString(formData.end);
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-primary-50 to-white">
@@ -228,6 +290,54 @@ export default function EditEvent() {
               required
               step={3600}
               className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg text-lg focus:outline-none focus:border-primary-500"
+            />
+          </div>
+
+          {/* 添付ファイル */}
+          <div className="mb-6 border-t pt-6">
+            <h3 className="text-lg font-bold text-gray-700 mb-3">📎 添付ファイル</h3>
+
+            {/* 現在の添付ファイル一覧 */}
+            {attachments.length > 0 && (
+              <ul className="space-y-2 mb-4">
+                {attachments.map(att => (
+                  <li
+                    key={att.id}
+                    className="flex items-center justify-between p-3 bg-gray-50 rounded-lg border border-gray-200"
+                  >
+                    <div className="flex items-center gap-3 min-w-0">
+                      <span className="text-2xl flex-shrink-0">📄</span>
+                      <div className="min-w-0">
+                        <a
+                          href={att.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="font-medium text-primary-600 hover:underline truncate block"
+                        >
+                          {att.name}
+                        </a>
+                        <p className="text-sm text-gray-500">
+                          {(att.size / 1024 / 1024).toFixed(2)} MB
+                        </p>
+                      </div>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => handleRemoveAttachment(att)}
+                      className="flex-shrink-0 ml-3 bg-red-100 text-red-600 hover:bg-red-200 px-3 py-1.5 rounded-lg font-bold text-sm transition-colors"
+                    >
+                      🗑 削除
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            )}
+
+            {/* 新規アップロード */}
+            <FileUpload
+              onUploadComplete={handleFileUploadComplete}
+              acceptedTypes=".xlsx,.xls,.doc,.docx,.pdf,.png,.jpg,.jpeg"
+              maxSizeMB={10}
             />
           </div>
 
