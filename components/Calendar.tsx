@@ -53,9 +53,6 @@ const calendarStyles = `
   .rbc-today {
     background-color: #e8f4fd;
   }
-  .rbc-month-view .rbc-date-cell {
-    padding: 2px 4px;
-  }
   /* 土日祝日セルの背景色 */
   .rbc-day-weekend {
     background-color: #fff5f5 !important;
@@ -66,8 +63,39 @@ const calendarStyles = `
   }
   /* モバイル：月末6行でも見切れないよう行の最小高さを確保 */
   .rbc-month-row {
-    min-height: 56px;
+    min-height: 72px;
     overflow: visible;
+  }
+  /* 日付セルの高さを固定してイベントがずれないようにする */
+  .rbc-month-view .rbc-date-cell {
+    padding: 1px 3px;
+    height: 22px;
+    line-height: 1.2;
+    overflow: hidden;
+  }
+  /* イベントが日付直下に配置されるよう調整 */
+  .rbc-row-content {
+    position: relative;
+  }
+  @media (max-width: 640px) {
+    .rbc-month-row {
+      min-height: 68px;
+    }
+    .rbc-month-view .rbc-date-cell {
+      padding: 1px 2px;
+      height: 18px;
+      font-size: 0.8rem;
+    }
+    .rbc-event {
+      padding: 1px 2px !important;
+      font-size: 0.68rem !important;
+      border-radius: 4px !important;
+      line-height: 1.2;
+    }
+    .rbc-event-content {
+      font-size: 0.68rem;
+      line-height: 1.2;
+    }
   }
   /* +N件ボタンをタップしやすく */
   .rbc-show-more {
@@ -124,7 +152,9 @@ const CustomDateHeader = ({ date, label }: { date: Date; label: string }) => {
       title={holidayName ?? undefined}
     >
       {label}
-      {holidayName && <span style={{ fontSize: '0.65em', display: 'block', lineHeight: 1.1 }}>{holidayName}</span>}
+      {holidayName && (
+        <span className="hidden sm:block" style={{ fontSize: '0.55em', lineHeight: 1 }}>{holidayName}</span>
+      )}
     </span>
   );
 };
