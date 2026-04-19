@@ -27,6 +27,7 @@ export default function EditGameResultPage() {
   const [location, setLocation] = useState('');
   const [notes, setNotes] = useState('');
   const [isHomeTeam, setIsHomeTeam] = useState(false);
+  const [showX, setShowX] = useState(false);
   const [inningScores, setInningScores] = useState<InningScore[]>(emptyInnings(9));
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -57,6 +58,7 @@ export default function EditGameResultPage() {
         setLocation(data.location || '');
         setNotes(data.notes || '');
         setIsHomeTeam(data.isHomeTeam ?? false);
+        setShowX(data.showX ?? false);
 
         // 日付をinput[type=date]用にフォーマット
         const d: Date = data.date.toDate();
@@ -142,6 +144,7 @@ export default function EditGameResultPage() {
         ourTeamName: ourTeamName.trim() || 'ポストン',
         opponent: opponent.trim(),
         isHomeTeam,
+        showX,
         inningScores: filteredScores.map(s => ({
           inning: s.inning,
           ourScore: s.ourScore ?? 0,
@@ -341,6 +344,17 @@ export default function EditGameResultPage() {
                 </button>
               )}
             </div>
+
+            {/* x表示トグル */}
+            <label className="flex items-center gap-3 cursor-pointer select-none w-fit">
+              <input
+                type="checkbox"
+                checked={showX}
+                onChange={e => setShowX(e.target.checked)}
+                className="w-5 h-5 accent-primary-500"
+              />
+              <span className="text-lg text-gray-700">後攻チームの最終回に <span className="font-bold">x</span> を表示する（後攻が勝った場合）</span>
+            </label>
 
             {/* 合計スコアプレビュー */}
             <div className="mt-6 p-4 bg-gray-50 rounded-xl text-center border-2 border-gray-200">

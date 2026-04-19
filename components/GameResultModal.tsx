@@ -68,10 +68,7 @@ export default function GameResultModal({ game, isOpen, onClose }: GameResultMod
             {game.inningScores && game.inningScores.length > 0 && (() => {
               const scores = game.inningScores;
               const lastIdx = scores.length - 1;
-              // 後攻チームが勝っている場合、最終回の後攻スコアに「x」を付ける
-              const homeWon = game.isHomeTeam
-                ? game.ourScore > game.opponentScore
-                : game.opponentScore > game.ourScore;
+              const showX = game.showX ?? false;
 
               // 先攻行・後攻行を決定
               const topTeamName = game.isHomeTeam ? game.opponent : game.ourTeamName;
@@ -107,7 +104,7 @@ export default function GameResultModal({ game, isOpen, onClose }: GameResultMod
                         <td className="px-2 py-2 text-left font-bold text-primary-700 bg-primary-50">{bottomTeamName}</td>
                         {bottomScores.map((score, i) => (
                           <td key={i} className="px-2 py-2 font-bold text-primary-700 bg-primary-50">
-                            {i === lastIdx && homeWon
+                            {i === lastIdx && showX
                               ? <span>{score}<span className="text-gray-500">x</span></span>
                               : score}
                           </td>
