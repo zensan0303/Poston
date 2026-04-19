@@ -46,6 +46,7 @@ export default function GameResultsManagement() {
           date: data.date.toDate(),
           ourTeamName: data.ourTeamName || 'ポストン',
           opponent: data.opponent,
+          isHomeTeam: data.isHomeTeam ?? false,
           inningScores: data.inningScores || [],
           ourScore: data.ourScore,
           opponentScore: data.opponentScore,
@@ -205,42 +206,63 @@ export default function GameResultsManagement() {
                 </div>
 
                 {/* アコーディオン展開部分 */}
-                {expandedId === game.id && game.inningScores && game.inningScores.length > 0 && (
-                  <div className="border-t border-gray-100 bg-gray-50 p-4">
-                    <div className="overflow-x-auto">
-                      <table className="text-center text-sm border-collapse" style={{ minWidth: '360px' }}>
-                        <thead>
-                          <tr className="bg-primary-500 text-white">
-                            <th className="px-2 py-2 text-left rounded-tl-lg w-20">チーム</th>
-                            {game.inningScores.map(s => (
-                              <th key={s.inning} className="px-2 py-2 w-8">{s.inning}</th>
-                            ))}
-                            <th className="px-2 py-2 bg-primary-700 font-bold rounded-tr-lg w-10">計</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          <tr className="border-t border-gray-200">
-                            <td className="px-2 py-2 text-left font-bold text-primary-700 bg-primary-50">{game.ourTeamName}</td>
-                            {game.inningScores.map((s, i) => (
-                              <td key={i} className="px-2 py-2 font-bold text-primary-700 bg-primary-50">{s.ourScore}</td>
-                            ))}
-                            <td className="px-2 py-2 font-bold text-primary-700 bg-primary-100">{game.ourScore}</td>
-                          </tr>
-                          <tr className="border-t border-gray-200">
-                            <td className="px-2 py-2 text-left font-bold text-gray-700 bg-gray-50">{game.opponent}</td>
-                            {game.inningScores.map((s, i) => (
-                              <td key={i} className="px-2 py-2 font-bold text-gray-700 bg-gray-50">{s.opponentScore}</td>
-                            ))}
-                            <td className="px-2 py-2 font-bold text-gray-700 bg-gray-100">{game.opponentScore}</td>
-                          </tr>
-                        </tbody>
-                      </table>
+                {expandedId === game.id && game.inningScores && game.inningScores.length > 0 && (() => {
+                  const scores = game.inningScores;
+                  const lastIdx = scores.length - 1;
+                  const homeWon = game.isHomeTeam
+                    ? game.ourScore > game.opponentScore
+                    : game.opponentScore > game.ourScore;
+                  const topName = game.isHomeTeam ? game.opponent : game.ourTeamName;
+                  const bottomName = game.isHomeTeam ? game.ourTeamName : game.opponent;
+                  const topTotal = game.isHomeTeam ? game.opponentScore : game.ourScore;
+                  const bottomTotal = game.isHomeTeam ? game.ourScore : game.opponentScore;
+                  const topScores = scores.map(s => game.isHomeTeam ? s.opponentScore : s.ourScore);
+                  const bottomScores = scores.map(s => game.isHomeTeam ? s.ourScore : s.opponentScore);
+                  return (
+                    <div className="border-t border-gray-100 bg-gray-50 p-4">
+                      <div className="overflow-x-auto">
+                        <table className="text-center text-sm border-collapse" style={{ minWidth: '360px' }}>
+                          <thead>
+                            <tr className="bg-primary-500 text-white">
+                              <th className="px-2 py-2 text-left rounded-tl-lg w-20">チーム</th>
+                              {scores.map(s => (
+                                <th key={s.inning} className="px-2 py-2 w-8">{s.inning}</th>
+                              ))}
+                              <th className="px-2 py-2 bg-primary-700 font-bold rounded-tr-lg w-10">計</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr className="border-t border-gray-200">
+                              <td className="px-2 py-2 text-left font-bold text-gray-700 bg-gray-50">
+                                <div className="text-xs text-gray-400">先攻</div>{topName}
+                              </td>
+                              {topScores.map((score, i) => (
+                                <td key={i} className="px-2 py-2 font-bold text-gray-700 bg-gray-50">{score}</td>
+                              ))}
+                              <td className="px-2 py-2 font-bold text-gray-700 bg-gray-100">{topTotal}</td>
+                            </tr>
+                            <tr className="border-t border-gray-200">
+                              <td className="px-2 py-2 text-left font-bold text-primary-700 bg-primary-50">
+                                <div className="text-xs text-primary-300">後攻</div>{bottomName}
+                              </td>
+                              {bottomScores.map((score, i) => (
+                                <td key={i} className="px-2 py-2 font-bold text-primary-700 bg-primary-50">
+                                  {i === lastIdx && homeWon
+                                    ? <span>{score}<span className="text-gray-500">x</span></span>
+                                    : score}
+                                </td>
+                              ))}
+                              <td className="px-2 py-2 font-bold text-primary-700 bg-primary-100">{bottomTotal}</td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      {game.notes && (
+                        <p className="mt-3 text-gray-600 text-base">📝 {game.notes}</p>
+                      )}
                     </div>
-                    {game.notes && (
-                      <p className="mt-3 text-gray-600 text-base">📝 {game.notes}</p>
-                    )}
-                  </div>
-                )}
+                  );
+                })()}
               </div>
             ))}
           </div>

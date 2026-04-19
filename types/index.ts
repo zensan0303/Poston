@@ -35,6 +35,7 @@ export interface GameResult {
   date: Date;
   ourTeamName: string;
   opponent: string;
+  isHomeTeam: boolean;    // true=後攻（自チームがホーム）、false=先攻
   inningScores: InningScore[];
   ourScore: number;       // 合計（自動計算）
   opponentScore: number;  // 合計（自動計算）

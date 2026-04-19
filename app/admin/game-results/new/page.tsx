@@ -26,6 +26,7 @@ export default function NewGameResultPage() {
   const [date, setDate] = useState('');
   const [location, setLocation] = useState('');
   const [notes, setNotes] = useState('');
+  const [isHomeTeam, setIsHomeTeam] = useState(false); // false=先攻, true=後攻
   const [inningScores, setInningScores] = useState<InningScore[]>(emptyInnings(DEFAULT_INNINGS));
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -81,11 +82,17 @@ export default function NewGameResultPage() {
       const dateObj = new Date(date);
       dateObj.setHours(12, 0, 0, 0);
 
+      // 両チームともスコアがない回を除外
+      const filteredScores = inningScores.filter(
+        s => s.ourScore !== null || s.opponentScore !== null
+      );
+
       await addDoc(collection(db, 'gameResults'), {
         date: Timestamp.fromDate(dateObj),
         ourTeamName: ourTeamName.trim() || 'ポストン',
         opponent: opponent.trim(),
-        inningScores: inningScores.map(s => ({
+        isHomeTeam,
+        inningScores: filteredScores.map(s => ({
           inning: s.inning,
           ourScore: s.ourScore ?? 0,
           opponentScore: s.opponentScore ?? 0,
@@ -168,7 +175,18 @@ export default function NewGameResultPage() {
 
               {/* 自チーム名 */}
               <div>
-                <label className="block text-lg font-bold text-gray-700 mb-2">自チーム名</label>
+                <div className="flex items-center gap-2 mb-2">
+                  <label className="text-lg font-bold text-gray-700">自チーム名</label>
+                  <button
+                    type="button"
+                    onClick={() => setIsHomeTeam(prev => !prev)}
+                    className={`text-sm font-bold px-2 py-0.5 rounded transition-colors ${
+                      !isHomeTeam ? 'bg-primary-500 text-white' : 'bg-gray-200 text-gray-600 hover:bg-gray-300'
+                    }`}
+                  >
+                    {!isHomeTeam ? '▶ 先攻' : '後攻'}
+                  </button>
+                </div>
                 <input
                   type="text"
                   value={ourTeamName}
@@ -180,7 +198,18 @@ export default function NewGameResultPage() {
 
               {/* 対戦相手 */}
               <div>
-                <label className="block text-lg font-bold text-gray-700 mb-2">対戦相手 *</label>
+                <div className="flex items-center gap-2 mb-2">
+                  <label className="text-lg font-bold text-gray-700">対戦相手 *</label>
+                  <button
+                    type="button"
+                    onClick={() => setIsHomeTeam(prev => !prev)}
+                    className={`text-sm font-bold px-2 py-0.5 rounded transition-colors ${
+                      isHomeTeam ? 'bg-primary-500 text-white' : 'bg-gray-200 text-gray-600 hover:bg-gray-300'
+                    }`}
+                  >
+                    {isHomeTeam ? '▶ 先攻' : '後攻'}
+                  </button>
+                </div>
                 <input
                   type="text"
                   value={opponent}
@@ -190,6 +219,7 @@ export default function NewGameResultPage() {
                   className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg text-xl focus:outline-none focus:border-primary-500"
                 />
               </div>
+
             </div>
           </div>
 
@@ -211,48 +241,40 @@ export default function NewGameResultPage() {
                   </tr>
                 </thead>
                 <tbody>
-                  {/* 自チーム行 */}
-                  <tr className="border-b border-gray-200">
-                    <td className="px-3 py-2 text-left font-bold text-primary-700 bg-primary-50 text-base">
-                      {ourTeamName || 'ポストン'}
-                    </td>
-                    {inningScores.map((s, i) => (
-                      <td key={i} className="px-1 py-2">
-                        <input
-                          type="number"
-                          min="0"
-                          max="99"
-                          value={s.ourScore ?? ''}
-                          onChange={e => handleInningChange(i, 'ourScore', e.target.value)}
-                          className="w-10 h-10 text-center text-xl font-bold border-2 border-gray-300 rounded-lg focus:outline-none focus:border-primary-500 text-primary-700"
-                        />
-                      </td>
-                    ))}
-                    <td className="px-3 py-2 text-2xl font-bold text-primary-700 bg-primary-50">
-                      {ourTotal}
-                    </td>
-                  </tr>
-                  {/* 相手チーム行 */}
-                  <tr>
-                    <td className="px-3 py-2 text-left font-bold text-gray-700 bg-gray-50 text-base">
-                      {opponent || '相手チーム'}
-                    </td>
-                    {inningScores.map((s, i) => (
-                      <td key={i} className="px-1 py-2">
-                        <input
-                          type="number"
-                          min="0"
-                          max="99"
-                          value={s.opponentScore ?? ''}
-                          onChange={e => handleInningChange(i, 'opponentScore', e.target.value)}
-                          className="w-10 h-10 text-center text-xl font-bold border-2 border-gray-300 rounded-lg focus:outline-none focus:border-primary-500 text-gray-700"
-                        />
-                      </td>
-                    ))}
-                    <td className="px-3 py-2 text-2xl font-bold text-gray-700 bg-gray-50">
-                      {oppTotal}
-                    </td>
-                  </tr>
+                  {/* 先攻（表）・後攻（裏）の順で行を表示 */}
+                  {[!isHomeTeam ? 'our' : 'opp', !isHomeTeam ? 'opp' : 'our'].map((team, rowIdx) => {
+                    const isOur = team === 'our';
+                    const isFirst = rowIdx === 0; // 先攻行
+                    return (
+                      <tr key={team} className={isFirst ? 'border-b border-gray-200' : ''}>
+                        <td className={`px-3 py-2 text-left font-bold text-base ${
+                          isOur ? 'text-primary-700 bg-primary-50' : 'text-gray-700 bg-gray-50'
+                        }`}>
+                          <div className="text-xs font-semibold text-gray-400 mb-0.5">{isFirst ? '先攻' : '後攻'}</div>
+                          {isOur ? (ourTeamName || 'ポストン') : (opponent || '相手チーム')}
+                        </td>
+                        {inningScores.map((s, i) => (
+                          <td key={i} className="px-1 py-2">
+                            <input
+                              type="number"
+                              min="0"
+                              max="99"
+                              value={(isOur ? s.ourScore : s.opponentScore) ?? ''}
+                              onChange={e => handleInningChange(i, isOur ? 'ourScore' : 'opponentScore', e.target.value)}
+                              className={`w-10 h-10 text-center text-xl font-bold border-2 border-gray-300 rounded-lg focus:outline-none focus:border-primary-500 ${
+                                isOur ? 'text-primary-700' : 'text-gray-700'
+                              }`}
+                            />
+                          </td>
+                        ))}
+                        <td className={`px-3 py-2 text-2xl font-bold ${
+                          isOur ? 'text-primary-700 bg-primary-50' : 'text-gray-700 bg-gray-50'
+                        }`}>
+                          {isOur ? ourTotal : oppTotal}
+                        </td>
+                      </tr>
+                    );
+                  })}
                 </tbody>
               </table>
             </div>

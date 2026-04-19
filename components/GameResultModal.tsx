@@ -65,37 +65,60 @@ export default function GameResultModal({ game, isOpen, onClose }: GameResultMod
             </div>
 
             {/* イニング別内訳 */}
-            {game.inningScores && game.inningScores.length > 0 && (
-              <div className="mt-5 overflow-x-auto">
-                <table className="w-full text-center border-collapse text-sm" style={{ minWidth: '320px' }}>
-                  <thead>
-                    <tr className="bg-primary-500 text-white">
-                      <th className="px-2 py-2 text-left rounded-tl-lg w-20">チーム</th>
-                      {game.inningScores.map(s => (
-                        <th key={s.inning} className="px-2 py-2 w-8">{s.inning}</th>
-                      ))}
-                      <th className="px-2 py-2 bg-primary-700 font-bold rounded-tr-lg w-10">計</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr className="border-b border-primary-200">
-                      <td className="px-2 py-2 text-left font-bold text-primary-700 bg-primary-50">{game.ourTeamName}</td>
-                      {game.inningScores.map((s, i) => (
-                        <td key={i} className="px-2 py-2 font-bold text-primary-700 bg-primary-50">{s.ourScore}</td>
-                      ))}
-                      <td className="px-2 py-2 font-bold text-primary-700 bg-primary-100">{game.ourScore}</td>
-                    </tr>
-                    <tr>
-                      <td className="px-2 py-2 text-left font-bold text-gray-700 bg-gray-50">{game.opponent}</td>
-                      {game.inningScores.map((s, i) => (
-                        <td key={i} className="px-2 py-2 font-bold text-gray-700 bg-gray-50">{s.opponentScore}</td>
-                      ))}
-                      <td className="px-2 py-2 font-bold text-gray-700 bg-gray-100">{game.opponentScore}</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            )}
+            {game.inningScores && game.inningScores.length > 0 && (() => {
+              const scores = game.inningScores;
+              const lastIdx = scores.length - 1;
+              // 後攻チームが勝っている場合、最終回の後攻スコアに「x」を付ける
+              const homeWon = game.isHomeTeam
+                ? game.ourScore > game.opponentScore
+                : game.opponentScore > game.ourScore;
+
+              // 先攻行・後攻行を決定
+              const topTeamName = game.isHomeTeam ? game.opponent : game.ourTeamName;
+              const bottomTeamName = game.isHomeTeam ? game.ourTeamName : game.opponent;
+              const topTotal = game.isHomeTeam ? game.opponentScore : game.ourScore;
+              const bottomTotal = game.isHomeTeam ? game.ourScore : game.opponentScore;
+              const topScores = scores.map(s => game.isHomeTeam ? s.opponentScore : s.ourScore);
+              const bottomScores = scores.map(s => game.isHomeTeam ? s.ourScore : s.opponentScore);
+
+              return (
+                <div className="mt-5 overflow-x-auto">
+                  <table className="w-full text-center border-collapse text-sm" style={{ minWidth: '320px' }}>
+                    <thead>
+                      <tr className="bg-primary-500 text-white">
+                        <th className="px-2 py-2 text-left rounded-tl-lg w-20">チーム</th>
+                        {scores.map(s => (
+                          <th key={s.inning} className="px-2 py-2 w-8">{s.inning}</th>
+                        ))}
+                        <th className="px-2 py-2 bg-primary-700 font-bold rounded-tr-lg w-10">計</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {/* 先攻行（表） */}
+                      <tr className="border-b border-primary-200">
+                        <td className="px-2 py-2 text-left font-bold text-gray-700 bg-gray-50">{topTeamName}</td>
+                        {topScores.map((score, i) => (
+                          <td key={i} className="px-2 py-2 font-bold text-gray-700 bg-gray-50">{score}</td>
+                        ))}
+                        <td className="px-2 py-2 font-bold text-gray-700 bg-gray-100">{topTotal}</td>
+                      </tr>
+                      {/* 後攻行（裏） */}
+                      <tr>
+                        <td className="px-2 py-2 text-left font-bold text-primary-700 bg-primary-50">{bottomTeamName}</td>
+                        {bottomScores.map((score, i) => (
+                          <td key={i} className="px-2 py-2 font-bold text-primary-700 bg-primary-50">
+                            {i === lastIdx && homeWon
+                              ? <span>{score}<span className="text-gray-500">x</span></span>
+                              : score}
+                          </td>
+                        ))}
+                        <td className="px-2 py-2 font-bold text-primary-700 bg-primary-100">{bottomTotal}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              );
+            })()}
           </div>
 
           {/* 場所 */}
