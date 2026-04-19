@@ -34,6 +34,7 @@ export default function ResultsPage() {
           ourTeamName: data.ourTeamName || 'ポストン',
           opponent: data.opponent,
           isHomeTeam: data.isHomeTeam ?? false,
+          showX: data.showX ?? false,
           inningScores: data.inningScores || [],
           ourScore: data.ourScore,
           opponentScore: data.opponentScore,
@@ -209,9 +210,7 @@ export default function ResultsPage() {
                       {game.inningScores && game.inningScores.length > 0 && (() => {
                           const scores = game.inningScores;
                           const lastIdx = scores.length - 1;
-                          const homeWon = game.isHomeTeam
-                            ? game.ourScore > game.opponentScore
-                            : game.opponentScore > game.ourScore;
+                          const showX = game.showX ?? false;
                           const topTeamName = game.isHomeTeam ? game.opponent : game.ourTeamName;
                           const bottomTeamName = game.isHomeTeam ? game.ourTeamName : game.opponent;
                           const topTotal = game.isHomeTeam ? game.opponentScore : game.ourScore;
@@ -244,7 +243,7 @@ export default function ResultsPage() {
                                       <td className="px-3 py-2 text-left font-bold text-primary-700 bg-primary-50">{bottomTeamName}</td>
                                       {bottomScores.map((score, i) => (
                                         <td key={i} className="px-2 py-2 font-bold text-primary-700 bg-primary-50">
-                                          {i === lastIdx && homeWon
+                                          {i === lastIdx && showX
                                             ? <span>{score}<span className="text-gray-500">x</span></span>
                                             : score}
                                         </td>
