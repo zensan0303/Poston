@@ -139,7 +139,7 @@ export default function GameResultsManagement() {
                         <p className="text-gray-500 text-base mb-1">
                           {format(game.date, 'yyyy年M月d日(E)', { locale: ja })}
                         </p>
-                        <p className="text-xl font-bold text-gray-800">vs {game.opponent}</p>
+                        <p className="text-xl font-bold text-gray-800">{game.ourTeamName} vs {game.opponent}</p>
                         {game.location && (
                           <p className="text-gray-500 text-base mt-1">📍 {game.location}</p>
                         )}

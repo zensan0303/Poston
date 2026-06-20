@@ -3,6 +3,7 @@
 import { useState, ChangeEvent } from 'react';
 import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
 import { getStorageInstance } from '@/lib/firebase';
+import { sanitizeFileName } from '@/lib/security';
 
 interface FileUploadProps {
   onUploadComplete: (url: string, fileName: string, fileSize: number) => void;
@@ -19,6 +20,23 @@ export default function FileUpload({
   const [error, setError] = useState('');
   const [progress, setProgress] = useState(0);
 
+  const allowedExtensions = new Set(
+    acceptedTypes
+      .split(',')
+      .map((t) => t.trim().toLowerCase().replace('.', ''))
+      .filter(Boolean)
+  );
+
+  const allowedMimeTypes = new Set([
+    'application/pdf',
+    'application/msword',
+    'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+    'application/vnd.ms-excel',
+    'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+    'image/png',
+    'image/jpeg',
+  ]);
+
   const handleFileChange = async (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -32,12 +50,24 @@ export default function FileUpload({
       return;
     }
 
+    const ext = file.name.split('.').pop()?.toLowerCase() ?? '';
+    const isExtAllowed = allowedExtensions.has(ext);
+    const isMimeAllowed = !file.type || allowedMimeTypes.has(file.type);
+    if (!isExtAllowed || !isMimeAllowed) {
+      setError('対応していないファイル形式です');
+      return;
+    }
+
     setUploading(true);
     setProgress(0);
 
     try {
       const timestamp = Date.now();
-      const fileName = `${timestamp}_${file.name}`;
+      const random = typeof crypto !== 'undefined' && 'randomUUID' in crypto
+        ? crypto.randomUUID()
+        : Math.random().toString(36).slice(2);
+      const safeName = sanitizeFileName(file.name);
+      const fileName = `${timestamp}_${random}_${safeName}`;
       const storageRef = ref(getStorageInstance(), `attachments/${fileName}`);
 
       await new Promise<void>((resolve, reject) => {

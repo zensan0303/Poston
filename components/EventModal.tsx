@@ -3,6 +3,7 @@
 import { Event } from '@/types';
 import { format } from 'date-fns';
 import { ja } from 'date-fns/locale';
+import { isSafeAttachmentUrl } from '@/lib/security';
 
 interface EventModalProps {
   event: Event;
@@ -82,17 +83,24 @@ export default function EventModal({ event, isOpen, onClose }: EventModalProps) 
               <ul className="space-y-2">
                 {event.attachments.map((attachment) => (
                   <li key={attachment.id}>
-                    <a
-                      href={attachment.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center gap-2 text-primary-600 hover:text-primary-800 text-lg underline"
-                    >
-                      📄 {attachment.name}
-                      <span className="text-sm text-gray-500">
-                        ({Math.round(attachment.size / 1024)} KB)
+                    {isSafeAttachmentUrl(attachment.url) ? (
+                      <a
+                        href={attachment.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-2 text-primary-600 hover:text-primary-800 text-lg underline"
+                      >
+                        📄 {attachment.name}
+                        <span className="text-sm text-gray-500">
+                          ({Math.round(attachment.size / 1024)} KB)
+                        </span>
+                      </a>
+                    ) : (
+                      <span className="flex items-center gap-2 text-gray-500 text-lg">
+                        📄 {attachment.name}
+                        <span className="text-sm">(安全でないURLのため開けません)</span>
                       </span>
-                    </a>
+                    )}
                   </li>
                 ))}
               </ul>

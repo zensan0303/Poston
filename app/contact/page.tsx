@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { collection, addDoc, Timestamp } from 'firebase/firestore';
 import { getDbInstance } from '@/lib/firebase';
 import Link from 'next/link';
+import { sanitizeEmail, sanitizePhone, sanitizePlainText } from '@/lib/security';
 
 export default function ContactPage() {
   const [formData, setFormData] = useState({
@@ -15,6 +16,7 @@ export default function ContactPage() {
   const [loading, setLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState('');
+  const [website, setWebsite] = useState(''); // bot用ハニーポット
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -23,16 +25,36 @@ export default function ContactPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (website.trim()) {
+      setSubmitted(true);
+      return;
+    }
+
+    const lastSubmittedAt = Number(localStorage.getItem('contact_last_submit_at') || '0');
+    if (Date.now() - lastSubmittedAt < 15000) {
+      setError('短時間での連続送信はできません。少し待ってから再送してください。');
+      return;
+    }
+
     setLoading(true);
     setError('');
 
     try {
       const db = getDbInstance();
+      const safeData = {
+        name: sanitizePlainText(formData.name, 80),
+        email: sanitizeEmail(formData.email),
+        phone: sanitizePhone(formData.phone),
+        message: sanitizePlainText(formData.message, 3000),
+      };
       await addDoc(collection(db, 'contacts'), {
-        ...formData,
+        ...safeData,
         status: 'unread',
         createdAt: Timestamp.now(),
       });
+
+      localStorage.setItem('contact_last_submit_at', String(Date.now()));
       
       setSubmitted(true);
       setFormData({ name: '', email: '', phone: '', message: '' });
@@ -111,6 +133,16 @@ export default function ContactPage() {
           )}
 
           <form onSubmit={handleSubmit} className="space-y-6">
+            <input
+              type="text"
+              value={website}
+              onChange={(e) => setWebsite(e.target.value)}
+              tabIndex={-1}
+              autoComplete="off"
+              aria-hidden="true"
+              className="hidden"
+            />
+
             {/* お名前 */}
             <div>
               <label htmlFor="name" className="block text-xl-mobile font-bold mb-2 text-gray-700">

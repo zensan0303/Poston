@@ -81,7 +81,7 @@ export default function Home() {
       <header className="bg-primary-500 text-white p-4 md:p-6 shadow-lg">
         <div className="max-w-6xl mx-auto flex items-center justify-between">
           <h1 className="text-2xl-mobile md:text-3xl font-bold whitespace-nowrap">
-            ⚾ ポストン
+            🥎 ポストン
           </h1>
           
           {/* メニューボタン（モバイル） */}

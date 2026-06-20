@@ -9,6 +9,7 @@ import { ref, deleteObject } from 'firebase/storage';
 import { getDbInstance, getStorageInstance } from '@/lib/firebase';
 import FileUpload from '@/components/FileUpload';
 import { Attachment } from '@/types';
+import { isSafeAttachmentUrl, sanitizePlainText } from '@/lib/security';
 
 interface EventData {
   title: string;
@@ -138,14 +139,15 @@ export default function EditEvent() {
 
     try {
       const db = getDbInstance();
+      const safeAttachments = attachments.filter((att) => isSafeAttachmentUrl(att.url));
       await updateDoc(doc(db, 'events', eventId), {
-        title: formData.title,
-        description: formData.description,
-        location: formData.location,
+        title: sanitizePlainText(formData.title, 120),
+        description: sanitizePlainText(formData.description, 3000),
+        location: sanitizePlainText(formData.location, 120),
         type: formData.type,
         start: formData.start,
         end: formData.end,
-        attachments: attachments,
+        attachments: safeAttachments,
         updatedAt: serverTimestamp(),
       });
 
@@ -308,14 +310,20 @@ export default function EditEvent() {
                     <div className="flex items-center gap-3 min-w-0">
                       <span className="text-2xl flex-shrink-0">📄</span>
                       <div className="min-w-0">
-                        <a
-                          href={att.url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="font-medium text-primary-600 hover:underline truncate block"
-                        >
-                          {att.name}
-                        </a>
+                        {isSafeAttachmentUrl(att.url) ? (
+                          <a
+                            href={att.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="font-medium text-primary-600 hover:underline truncate block"
+                          >
+                            {att.name}
+                          </a>
+                        ) : (
+                          <span className="font-medium text-gray-500 truncate block">
+                            {att.name}（安全でないURL）
+                          </span>
+                        )}
                         <p className="text-sm text-gray-500">
                           {(att.size / 1024 / 1024).toFixed(2)} MB
                         </p>
