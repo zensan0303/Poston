@@ -5,6 +5,7 @@ import { collection, addDoc, Timestamp } from 'firebase/firestore';
 import { getDbInstance } from '@/lib/firebase';
 import FileUpload from '@/components/FileUpload';
 import { Attachment } from '@/types';
+import { isSafeAttachmentUrl, sanitizePlainText } from '@/lib/security';
 
 interface EventFormProps {
   onSuccess?: () => void;
@@ -84,13 +85,13 @@ export default function EventForm({ onSuccess }: EventFormProps) {
       });
 
       const docRef = await addDoc(collection(db, 'events'), {
-        title: formData.title,
-        description: formData.description,
-        location: formData.location,
+        title: sanitizePlainText(formData.title, 120),
+        description: sanitizePlainText(formData.description, 3000),
+        location: sanitizePlainText(formData.location, 120),
         type: formData.type,
         start: Timestamp.fromDate(startDate),
         end: Timestamp.fromDate(endDate),
-        attachments: attachments,
+        attachments: attachments.filter((att) => isSafeAttachmentUrl(att.url)),
         createdAt: Timestamp.now(),
         updatedAt: Timestamp.now(),
       });
