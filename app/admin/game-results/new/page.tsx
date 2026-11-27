@@ -128,7 +128,7 @@ export default function NewGameResultPage() {
       {/* ヘッダー */}
       <header className="bg-primary-500 text-white p-4 md:p-6 shadow-lg">
         <div className="max-w-4xl mx-auto flex items-center justify-between">
-          <h1 className="text-2xl-mobile md:text-3xl font-bold">🏆 試合結果追加</h1>
+          <h1 className="text-2xl-mobile md:text-3xl font-bold">試合結果追加</h1>
           <Link
             href="/admin/game-results"
             className="bg-white text-primary-600 px-4 py-2 rounded-lg font-bold hover:bg-gray-100 transition-colors"
@@ -323,7 +323,7 @@ export default function NewGameResultPage() {
 
           {/* メモ */}
           <div className="bg-white rounded-xl shadow-md p-6">
-            <h2 className="text-xl font-bold text-gray-800 border-b pb-2 mb-4">📝 メモ</h2>
+            <h2 className="text-xl font-bold text-gray-800 border-b pb-2 mb-4">メモ</h2>
             <textarea
               value={notes}
               onChange={e => setNotes(e.target.value)}
@@ -346,7 +346,7 @@ export default function NewGameResultPage() {
               disabled={loading}
               className="flex-1 bg-primary-500 text-white py-4 rounded-xl text-xl font-bold hover:bg-primary-600 transition-colors disabled:opacity-50"
             >
-              {loading ? '保存中...' : '💾 保存する'}
+              {loading ? '保存中...' : '保存する'}
             </button>
           </div>
         </form>

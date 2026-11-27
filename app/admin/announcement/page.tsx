@@ -6,6 +6,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { doc, getDoc, setDoc } from 'firebase/firestore';
 import { getDbInstance } from '@/lib/firebase';
 import Link from 'next/link';
+import { Check, Eye, EyeOff, Lightbulb, Megaphone, Save } from 'lucide-react';
 
 export default function AnnouncementAdmin() {
   const { user, loading } = useAuth();
@@ -81,7 +82,10 @@ export default function AnnouncementAdmin() {
       {/* ヘッダー */}
       <header className="bg-primary-500 text-white p-6 shadow-lg">
         <div className="max-w-3xl mx-auto flex items-center justify-between">
-          <h1 className="text-2xl md:text-3xl font-bold">📢 お知らせバナー管理</h1>
+          <h1 className="text-2xl md:text-3xl font-bold inline-flex items-center gap-2">
+            <Megaphone size={24} aria-hidden="true" />
+            お知らせバナー管理
+          </h1>
           <Link
             href="/admin/dashboard"
             className="bg-white text-primary-600 px-4 py-2 rounded-lg font-bold hover:bg-gray-100 transition-colors"
@@ -99,8 +103,9 @@ export default function AnnouncementAdmin() {
             <h2 className="text-xl font-bold text-gray-700 mb-3">プレビュー</h2>
             <div className="bg-yellow-400 text-gray-900 overflow-hidden py-2 rounded-lg">
               <div className="relative flex items-center">
-                <span className="shrink-0 bg-yellow-500 font-bold px-3 py-0.5 mr-2 text-base rounded">
-                  📢 お知らせ
+                <span className="shrink-0 bg-yellow-500 font-bold px-3 py-0.5 mr-2 text-base rounded inline-flex items-center gap-1">
+                  <Megaphone size={16} aria-hidden="true" />
+                  お知らせ
                 </span>
                 <span className="text-base font-medium truncate">
                   {text || '（テキストを入力してください）'}
@@ -139,7 +144,10 @@ export default function AnnouncementAdmin() {
                     : 'bg-white text-gray-400 border-gray-200'
                 }`}
               >
-                ✅ 表示する
+                <span className="inline-flex items-center gap-2">
+                  <Eye size={20} aria-hidden="true" />
+                  表示する
+                </span>
               </button>
               <button
                 type="button"
@@ -150,7 +158,10 @@ export default function AnnouncementAdmin() {
                     : 'bg-white text-gray-400 border-gray-200'
                 }`}
               >
-                🚫 非表示
+                <span className="inline-flex items-center gap-2">
+                  <EyeOff size={20} aria-hidden="true" />
+                  非表示
+                </span>
               </button>
             </div>
           </div>
@@ -160,13 +171,15 @@ export default function AnnouncementAdmin() {
             <button
               onClick={handleSave}
               disabled={saving}
-              className="bg-primary-500 text-white px-8 py-3 rounded-xl text-xl font-bold hover:bg-primary-600 transition-colors disabled:opacity-50"
+              className="bg-primary-500 text-white px-8 py-3 rounded-xl text-xl font-bold hover:bg-primary-600 transition-colors disabled:opacity-50 inline-flex items-center gap-2"
             >
-              {saving ? '保存中...' : '💾 保存する'}
+              <Save size={20} aria-hidden="true" />
+              {saving ? '保存中...' : '保存する'}
             </button>
             {saved && (
-              <span className="text-green-600 text-lg font-bold animate-pulse">
-                ✅ 保存しました！
+              <span className="text-green-600 text-lg font-bold animate-pulse inline-flex items-center gap-1">
+                <Check size={18} aria-hidden="true" />
+                保存しました！
               </span>
             )}
           </div>
@@ -174,7 +187,10 @@ export default function AnnouncementAdmin() {
 
         {/* 使い方メモ */}
         <div className="mt-6 bg-blue-50 border-l-4 border-primary-500 p-4 rounded">
-          <p className="text-lg text-gray-700 font-bold mb-1">💡 使い方</p>
+          <p className="text-lg text-gray-700 font-bold mb-1 inline-flex items-center gap-2">
+            <Lightbulb size={20} aria-hidden="true" className="text-primary-600" />
+            使い方
+          </p>
           <ul className="text-gray-600 space-y-1 list-disc list-inside">
             <li>テキストを入力して「保存する」を押すと、トップページの帯に表示されます</li>
             <li>バナーを非表示にすると帯ごと消えます</li>

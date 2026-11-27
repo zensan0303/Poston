@@ -25,7 +25,6 @@ export default function EventForm({ onSuccess }: EventFormProps) {
   const [attachments, setAttachments] = useState<Attachment[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  const [success, setSuccess] = useState(false);
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
@@ -78,7 +77,7 @@ export default function EventForm({ onSuccess }: EventFormProps) {
       const endDate = new Date(formData.date);
       endDate.setHours(endHour, endMin, 0, 0);
 
-      console.log('📝 予定を保存中:', {
+      console.log('予定を保存中:', {
         title: formData.title,
         startDate,
         endDate,
@@ -96,7 +95,7 @@ export default function EventForm({ onSuccess }: EventFormProps) {
         updatedAt: Timestamp.now(),
       });
 
-      console.log('✅ 予定を保存しました:', docRef.id);
+      console.log('予定を保存しました:', docRef.id);
 
       // 成功時は即座に遷移（ローディングを完了させてから遷移）
       setLoading(false);
@@ -105,7 +104,7 @@ export default function EventForm({ onSuccess }: EventFormProps) {
       }
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : '予定の作成に失敗しました';
-      console.error('❌ エラー:', errorMessage, err);
+      console.error('エラー:', errorMessage, err);
       setError(errorMessage);
       setLoading(false);
     }
@@ -113,17 +112,11 @@ export default function EventForm({ onSuccess }: EventFormProps) {
 
   return (
     <div className="max-w-2xl mx-auto bg-white p-6 rounded-lg shadow-lg">
-      <h2 className="text-2xl font-bold mb-6 text-gray-800">📅 新規予定作成</h2>
+      <h2 className="text-2xl font-bold mb-6 text-gray-800">新規予定作成</h2>
 
       {error && (
         <div className="mb-4 p-4 bg-red-50 border border-red-200 rounded text-red-700">
           {error}
-        </div>
-      )}
-
-      {success && (
-        <div className="mb-4 p-4 bg-green-50 border border-green-200 rounded text-green-700">
-          ✅ 予定を作成しました！
         </div>
       )}
 
@@ -242,7 +235,7 @@ export default function EventForm({ onSuccess }: EventFormProps) {
         {/* ファイルアップロード */}
         <div className="border-t pt-4">
           <h3 className="text-lg font-semibold mb-3 text-gray-700">
-            📎 ファイル添付（Excel、PDF等）
+            ファイル添付（Excel、PDF等）
           </h3>
           <FileUpload 
             onUploadComplete={handleFileUploadComplete}
@@ -261,7 +254,7 @@ export default function EventForm({ onSuccess }: EventFormProps) {
                     className="flex items-center justify-between p-3 bg-gray-50 rounded border border-gray-200"
                   >
                     <div className="flex items-center gap-3">
-                      <span className="text-2xl">📄</span>
+                      <span className="text-2xl">ファイル</span>
                       <div>
                         <p className="font-medium text-gray-800">{att.name}</p>
                         <p className="text-sm text-gray-500">

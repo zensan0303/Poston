@@ -34,7 +34,7 @@ export default function NewEventPage() {
       <header className="bg-primary-500 text-white p-4 md:p-6 shadow-lg">
         <div className="max-w-6xl mx-auto">
           <h1 className="text-2xl-mobile md:text-3xl font-bold">
-            📅 新規予定作成
+            新規予定作成
           </h1>
         </div>
       </header>

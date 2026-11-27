@@ -43,7 +43,7 @@ export default function AdminDashboard() {
         <div className="max-w-6xl mx-auto">
           <div className="flex items-center justify-between mb-4">
             <h1 className="text-3xl-mobile md:text-4xl font-bold">
-              🔐 管理ダッシュボード
+              管理ダッシュボード
             </h1>
             <button
               onClick={handleLogout}
@@ -62,7 +62,7 @@ export default function AdminDashboard() {
           {/* 予定管理カード */}
           <Link href="/admin/events">
             <div className="bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition-shadow cursor-pointer border-2 border-primary-200 hover:border-primary-500">
-              <div className="text-5xl mb-4 text-center">📅</div>
+              <div className="text-xl mb-4 text-center text-primary-600 font-bold">予定</div>
               <h2 className="text-2xl-mobile font-bold text-center mb-2 text-primary-700">
                 予定管理
               </h2>
@@ -75,7 +75,7 @@ export default function AdminDashboard() {
           {/* 試合結果管理カード */}
           <Link href="/admin/game-results">
             <div className="bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition-shadow cursor-pointer border-2 border-primary-200 hover:border-primary-500">
-              <div className="text-5xl mb-4 text-center">🏆</div>
+              <div className="text-xl mb-4 text-center text-primary-600 font-bold">試合</div>
               <h2 className="text-2xl-mobile font-bold text-center mb-2 text-primary-700">
                 試合結果管理
               </h2>
@@ -88,7 +88,7 @@ export default function AdminDashboard() {
           {/* お問い合わせ管理カード */}
           <Link href="/admin/contacts">
             <div className="bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition-shadow cursor-pointer border-2 border-primary-200 hover:border-primary-500">
-              <div className="text-5xl mb-4 text-center">📧</div>
+              <div className="text-xl mb-4 text-center text-primary-600 font-bold">連絡</div>
               <h2 className="text-2xl-mobile font-bold text-center mb-2 text-primary-700">
                 お問い合わせ管理
               </h2>
@@ -101,7 +101,7 @@ export default function AdminDashboard() {
           {/* お知らせバナー管理カード */}
           <Link href="/admin/announcement">
             <div className="bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition-shadow cursor-pointer border-2 border-primary-200 hover:border-primary-500">
-              <div className="text-5xl mb-4 text-center">📢</div>
+              <div className="text-xl mb-4 text-center text-primary-600 font-bold">お知らせ</div>
               <h2 className="text-2xl-mobile font-bold text-center mb-2 text-primary-700">
                 お知らせバナー
               </h2>
@@ -115,7 +115,7 @@ export default function AdminDashboard() {
         {/* 注意書き */}
         <div className="mt-8 bg-blue-50 border-l-4 border-primary-500 p-4 rounded">
           <p className="text-lg text-gray-700">
-            💡 各メニューから予定や試合結果を管理できます
+            各メニューから予定や試合結果を管理できます
           </p>
         </div>
 

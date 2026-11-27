@@ -129,7 +129,7 @@ export default function FileUpload({
             }
           `}
         >
-          📎 ファイルを選択
+          ファイルを選択
           <input
             id="file-upload"
             type="file"

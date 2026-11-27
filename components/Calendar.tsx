@@ -4,10 +4,11 @@ import { Calendar as BigCalendar, dateFnsLocalizer, View } from 'react-big-calen
 import { format, parse, startOfWeek, getDay } from 'date-fns';
 import { ja } from 'date-fns/locale';
 import { useState, useCallback } from 'react';
+import { CalendarDays, ChevronLeft, ChevronRight } from 'lucide-react';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import { Event } from '@/types';
 
-// 2026年の日本の祝日（ハードコード）
+// 2026年・2027年の日本の祝日（ハードコード）
 const HOLIDAYS_2026: { [key: string]: string } = {
   '2026-01-01': '元日',
   '2026-01-12': '成人の日',
@@ -26,6 +27,24 @@ const HOLIDAYS_2026: { [key: string]: string } = {
   '2026-10-12': 'スポーツの日',
   '2026-11-03': '文化の日',
   '2026-11-23': '勤労感謝の日',
+
+  '2027-01-01': '元日',
+  '2027-01-11': '成人の日',
+  '2027-02-11': '建国記念の日',
+  '2027-02-23': '天皇誕生日',
+  '2027-03-21': '春分の日',
+  '2027-03-22': '振替休日',
+  '2027-04-29': '昭和の日',
+  '2027-05-03': '憲法記念日',
+  '2027-05-04': 'みどりの日',
+  '2027-05-05': 'こどもの日',
+  '2027-07-19': '海の日',
+  '2027-08-11': '山の日',
+  '2027-09-20': '敬老の日',
+  '2027-09-23': '秋分の日',
+  '2027-10-11': 'スポーツの日',
+  '2027-11-03': '文化の日',
+  '2027-11-23': '勤労感謝の日',
 };
 
 const locales = {
@@ -145,17 +164,10 @@ const isWeekendOrHoliday = (date: Date): boolean => {
 // カスタム日付ヘッダー（月ビュー）
 const CustomDateHeader = ({ date, label }: { date: Date; label: string }) => {
   const shouldHighlight = isWeekendOrHoliday(date);
-  const holidayName = isJapaneseHoliday(date) ? HOLIDAYS_2026[`${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`] : null;
 
   return (
-    <span
-      style={shouldHighlight ? { color: '#e53e3e', fontWeight: '700' } : {}}
-      title={holidayName ?? undefined}
-    >
+    <span style={shouldHighlight ? { color: '#e53e3e', fontWeight: '700' } : {}}>
       {label}
-      {holidayName && (
-        <span className="hidden sm:block" style={{ fontSize: '0.55em', lineHeight: 1 }}>{holidayName}</span>
-      )}
     </span>
   );
 };
@@ -183,7 +195,7 @@ export default function Calendar({ events, onSelectEvent, onSelectSlot }: Calend
   );
 
   // イベントのスタイルを設定
-  const eventStyleGetter = (event: Event) => {
+  const eventStyleGetter = (event: Event, start: Date) => {
     let backgroundColor = '#00bfff';
     let borderColor = '#0088cc';
     
@@ -205,6 +217,25 @@ export default function Calendar({ events, onSelectEvent, onSelectSlot }: Calend
         borderColor = '#5a6268';
     }
 
+    const isOutOfMonthInMonthView =
+      view === 'month' &&
+      (start.getFullYear() !== date.getFullYear() || start.getMonth() !== date.getMonth());
+
+    if (isOutOfMonthInMonthView) {
+      return {
+        style: {
+          backgroundColor: '#e5e7eb',
+          borderRadius: '8px',
+          opacity: 0.9,
+          color: '#6b7280',
+          border: '1px solid #d1d5db',
+          display: 'block',
+          fontWeight: '600',
+          boxShadow: 'none',
+        },
+      };
+    }
+
     return {
       style: {
         backgroundColor,
@@ -220,8 +251,19 @@ export default function Calendar({ events, onSelectEvent, onSelectSlot }: Calend
   };
 
   // 土日祝日セルにクラス付与
-  const dayPropGetter = (date: Date) => {
-    if (isWeekendOrHoliday(date)) {
+  const dayPropGetter = (cellDate: Date) => {
+    // 月表示では当月以外（前月/翌月の補完セル）は着色しない
+    if (view === 'month') {
+      const isSameMonthAsViewDate =
+        cellDate.getFullYear() === date.getFullYear() &&
+        cellDate.getMonth() === date.getMonth();
+
+      if (!isSameMonthAsViewDate) {
+        return {};
+      }
+    }
+
+    if (isWeekendOrHoliday(cellDate)) {
       return { className: 'rbc-day-weekend' };
     }
     return {};
@@ -249,38 +291,39 @@ export default function Calendar({ events, onSelectEvent, onSelectSlot }: Calend
       <style>{calendarStyles}</style>
       <div className="bg-white rounded-xl shadow-xl overflow-hidden border border-gray-100">
       {/* カレンダーヘッダー */}
-      <div className="bg-gradient-to-r from-primary-500 to-primary-600 text-white p-3 md:p-6">
+      <div className="bg-gradient-to-r from-primary-500 to-primary-600 text-white p-4 md:p-6">
         <div className="flex items-center justify-between gap-2">
-          <h3 className="text-base md:text-2xl font-bold flex items-center gap-1 whitespace-nowrap">
-            📅 {view === 'month' ? '月間' : view === 'week' ? '週間' : '日間'}
+          <h3 className="text-base md:text-2xl font-bold flex items-center gap-2 whitespace-nowrap text-white">
+            <CalendarDays size={20} aria-hidden="true" className="text-white/90" />
+            <span className="text-white">{view === 'month' ? '月間' : view === 'week' ? '週間' : '日間'}</span>
           </h3>
-          <div className="flex gap-1 md:gap-2 flex-shrink-0">
+          <div className="flex gap-2 md:gap-2 flex-shrink-0">
             <button
               onClick={() => setView('month')}
-              className={`px-3 py-1.5 rounded-lg font-bold transition-all text-sm md:text-base ${
+              className={`px-4 py-2 rounded-lg font-bold transition-all text-sm md:text-base ${
                 view === 'month'
-                  ? 'bg-white text-primary-600 shadow-md'
-                  : 'bg-primary-700 text-white hover:bg-primary-800'
+                  ? 'bg-white text-primary-700 shadow-md'
+                  : 'bg-primary-400/60 text-white/95 hover:bg-primary-400/80'
               }`}
             >
               月
             </button>
             <button
               onClick={() => setView('week')}
-              className={`px-3 py-1.5 rounded-lg font-bold transition-all text-sm md:text-base ${
+              className={`px-4 py-2 rounded-lg font-bold transition-all text-sm md:text-base ${
                 view === 'week'
-                  ? 'bg-white text-primary-600 shadow-md'
-                  : 'bg-primary-700 text-white hover:bg-primary-800'
+                  ? 'bg-white text-primary-700 shadow-md'
+                  : 'bg-primary-400/60 text-white/95 hover:bg-primary-400/80'
               }`}
             >
               週
             </button>
             <button
               onClick={() => setView('day')}
-              className={`px-3 py-1.5 rounded-lg font-bold transition-all text-sm md:text-base ${
+              className={`px-4 py-2 rounded-lg font-bold transition-all text-sm md:text-base ${
                 view === 'day'
-                  ? 'bg-white text-primary-600 shadow-md'
-                  : 'bg-primary-700 text-white hover:bg-primary-800'
+                  ? 'bg-white text-primary-700 shadow-md'
+                  : 'bg-primary-400/60 text-white/95 hover:bg-primary-400/80'
               }`}
             >
               日
@@ -322,7 +365,7 @@ export default function Calendar({ events, onSelectEvent, onSelectSlot }: Calend
       </div>
 
       {/* 前後の予定ナビゲーション */}
-      <div className="border-t border-gray-200 p-3 md:p-4 bg-gray-50">
+      <div className="border-t border-gray-200 p-4 md:p-4 bg-gray-50">
         <div className="flex gap-2 justify-between">
           <button
             onClick={() => {
@@ -332,15 +375,25 @@ export default function Calendar({ events, onSelectEvent, onSelectSlot }: Calend
               else newDate.setDate(newDate.getDate() - 1);
               setDate(newDate);
             }}
-            className="flex-1 bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700 text-white font-bold py-3 px-2 md:px-4 rounded-lg transition-all shadow-md text-sm md:text-lg whitespace-nowrap"
+            className="flex-1 bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700 text-white font-bold py-4 px-4 rounded-lg transition-all shadow-md text-sm md:text-lg whitespace-nowrap text-left"
           >
-            ← 前へ
+            <span className="inline-flex items-center gap-2 w-full justify-start">
+              <span className="w-4 text-center" aria-hidden="true">
+                <ChevronLeft size={16} className="text-white/90" />
+              </span>
+              <span className="text-white">前へ</span>
+            </span>
           </button>
           <button
             onClick={() => setDate(new Date())}
-            className="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold py-3 px-2 md:px-4 rounded-lg transition-all shadow-md text-sm md:text-lg whitespace-nowrap"
+            className="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-600 font-bold py-4 px-4 rounded-lg transition-all shadow-md text-sm md:text-lg whitespace-nowrap text-left"
           >
-            今日
+            <span className="inline-flex items-center gap-2 w-full justify-start">
+              <span className="w-4 text-center" aria-hidden="true">
+                <CalendarDays size={16} className="text-gray-500" />
+              </span>
+              <span className="text-gray-700">今日</span>
+            </span>
           </button>
           <button
             onClick={() => {
@@ -350,9 +403,14 @@ export default function Calendar({ events, onSelectEvent, onSelectSlot }: Calend
               else newDate.setDate(newDate.getDate() + 1);
               setDate(newDate);
             }}
-            className="flex-1 bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700 text-white font-bold py-3 px-2 md:px-4 rounded-lg transition-all shadow-md text-sm md:text-lg whitespace-nowrap"
+            className="flex-1 bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700 text-white font-bold py-4 px-4 rounded-lg transition-all shadow-md text-sm md:text-lg whitespace-nowrap text-left"
           >
-            次へ →
+            <span className="inline-flex items-center gap-2 w-full justify-start">
+              <span className="w-4 text-center" aria-hidden="true">
+                <ChevronRight size={16} className="text-white/90" />
+              </span>
+              <span className="text-white">次へ</span>
+            </span>
           </button>
         </div>
       </div>

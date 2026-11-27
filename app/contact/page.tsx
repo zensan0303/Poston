@@ -77,14 +77,14 @@ export default function ContactPage() {
               ← ホーム
             </Link>
             <h1 className="text-2xl-mobile md:text-3xl font-bold">
-              📧 お問い合わせ
+              お問い合わせ
             </h1>
           </div>
         </header>
 
         <main className="max-w-2xl mx-auto p-4 md:p-8">
           <div className="bg-white rounded-lg shadow-lg p-8 text-center">
-            <div className="text-6xl mb-4">✅</div>
+            <div className="text-3xl mb-4 text-green-600 font-bold">送信完了</div>
             <h2 className="text-3xl-mobile font-bold mb-4 text-green-600">
               送信完了
             </h2>
@@ -113,7 +113,7 @@ export default function ContactPage() {
             ← ホーム
           </Link>
           <h1 className="text-2xl-mobile md:text-3xl font-bold">
-            📧 お問い合わせ
+            お問い合わせ
           </h1>
         </div>
       </header>
@@ -224,7 +224,7 @@ export default function ContactPage() {
         {/* 注意書き */}
         <div className="mt-6 bg-blue-50 border-l-4 border-primary-500 p-4 rounded">
           <p className="text-lg text-gray-700">
-            💡 お問い合わせから2〜3日以内に返信いたします
+            お問い合わせから2〜3日以内に返信いたします
           </p>
         </div>
       </main>

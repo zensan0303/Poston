@@ -93,7 +93,7 @@ export default function GameResultsManagement() {
       {/* ヘッダー */}
       <header className="bg-primary-500 text-white p-4 md:p-6 shadow-lg">
         <div className="max-w-6xl mx-auto flex items-center justify-between">
-          <h1 className="text-2xl-mobile md:text-3xl font-bold">🏆 試合結果管理</h1>
+          <h1 className="text-2xl-mobile md:text-3xl font-bold">試合結果管理</h1>
           <div className="flex gap-2">
             <Link
               href="/admin/game-results/new"
@@ -141,7 +141,7 @@ export default function GameResultsManagement() {
                         </p>
                         <p className="text-xl font-bold text-gray-800">{game.ourTeamName} vs {game.opponent}</p>
                         {game.location && (
-                          <p className="text-gray-500 text-base mt-1">📍 {game.location}</p>
+                          <p className="text-gray-500 text-base mt-1">会場: {game.location}</p>
                         )}
                       </div>
                       {/* 操作ボタン */}
@@ -257,7 +257,7 @@ export default function GameResultsManagement() {
                         </table>
                       </div>
                       {game.notes && (
-                        <p className="mt-3 text-gray-600 text-base">📝 {game.notes}</p>
+                        <p className="mt-3 text-gray-600 text-base">メモ: {game.notes}</p>
                       )}
                     </div>
                   );

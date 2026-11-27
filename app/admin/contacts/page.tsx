@@ -140,7 +140,7 @@ export default function AdminContactsPage() {
             ← ダッシュボード
           </Link>
           <h1 className="text-xl md:text-2xl font-bold">
-            📧 お問い合わせ管理
+            お問い合わせ管理
           </h1>
         </div>
       </header>
