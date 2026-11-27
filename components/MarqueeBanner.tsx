@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { doc, getDoc } from 'firebase/firestore';
 import { getDbInstance } from '@/lib/firebase';
+import { Megaphone } from 'lucide-react';
 
 interface AnnouncementData {
   text: string;
@@ -52,8 +53,9 @@ export default function MarqueeBanner() {
         }
       `}</style>
       <div className="relative flex items-center">
-        <span className="shrink-0 bg-yellow-500 text-gray-900 font-bold px-3 py-0.5 mr-2 text-base z-10">
-          📢 お知らせ
+        <span className="shrink-0 bg-yellow-500 text-gray-900 font-bold px-3 py-0.5 mr-2 text-base z-10 inline-flex items-center gap-1">
+          <Megaphone size={16} aria-hidden="true" />
+          お知らせ
         </span>
         <div className="overflow-hidden flex-1">
           <span className="marquee-text text-base md:text-lg font-medium">

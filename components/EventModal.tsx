@@ -52,18 +52,23 @@ export default function EventModal({ event, isOpen, onClose }: EventModalProps) 
         <div className="p-6 space-y-4">
           {/* 日時 */}
           <div className="bg-gray-50 p-4 rounded-lg">
-            <h3 className="text-xl font-bold mb-2 text-gray-700">📅 日時</h3>
-            <p className="text-lg">
-              {format(event.start, 'yyyy年M月d日(E) HH:mm', { locale: ja })}
+            <h3 className="text-xl font-bold mb-2 text-gray-700">日時</h3>
+            <p className="text-lg">{format(event.start, 'yyyy年M月d日(E)', { locale: ja })}</p>
+            <p className="text-lg mt-1">
+              <span className="font-bold text-gray-900">
+                {format(event.start, 'HH:mm', { locale: ja })}
+              </span>
               {' 〜 '}
-              {format(event.end, 'HH:mm', { locale: ja })}
+              <span className="font-bold text-gray-900">
+                {format(event.end, 'HH:mm', { locale: ja })}
+              </span>
             </p>
           </div>
 
           {/* 場所 */}
           {event.location && (
             <div className="bg-gray-50 p-4 rounded-lg">
-              <h3 className="text-xl font-bold mb-2 text-gray-700">📍 場所</h3>
+              <h3 className="text-xl font-bold mb-2 text-gray-700">場所</h3>
               <p className="text-lg">{event.location}</p>
             </div>
           )}
@@ -71,7 +76,7 @@ export default function EventModal({ event, isOpen, onClose }: EventModalProps) 
           {/* 説明 */}
           {event.description && (
             <div className="bg-gray-50 p-4 rounded-lg">
-              <h3 className="text-xl font-bold mb-2 text-gray-700">📝 詳細</h3>
+              <h3 className="text-xl font-bold mb-2 text-gray-700">詳細</h3>
               <p className="text-lg whitespace-pre-wrap">{event.description}</p>
             </div>
           )}
@@ -79,7 +84,7 @@ export default function EventModal({ event, isOpen, onClose }: EventModalProps) 
           {/* 添付ファイル */}
           {event.attachments && event.attachments.length > 0 && (
             <div className="bg-gray-50 p-4 rounded-lg">
-              <h3 className="text-xl font-bold mb-2 text-gray-700">📎 添付ファイル</h3>
+              <h3 className="text-xl font-bold mb-2 text-gray-700">添付ファイル</h3>
               <ul className="space-y-2">
                 {event.attachments.map((attachment) => (
                   <li key={attachment.id}>
@@ -90,14 +95,14 @@ export default function EventModal({ event, isOpen, onClose }: EventModalProps) 
                         rel="noopener noreferrer"
                         className="flex items-center gap-2 text-primary-600 hover:text-primary-800 text-lg underline"
                       >
-                        📄 {attachment.name}
+                        {attachment.name}
                         <span className="text-sm text-gray-500">
                           ({Math.round(attachment.size / 1024)} KB)
                         </span>
                       </a>
                     ) : (
                       <span className="flex items-center gap-2 text-gray-500 text-lg">
-                        📄 {attachment.name}
+                        {attachment.name}
                         <span className="text-sm">(安全でないURLのため開けません)</span>
                       </span>
                     )}

@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
 import Link from 'next/link';
@@ -43,13 +43,7 @@ export default function EditEvent() {
     }
   }, [user, authLoading, router]);
 
-  useEffect(() => {
-    if (user) {
-      fetchEvent();
-    }
-  }, [user, eventId]);
-
-  const fetchEvent = async () => {
+  const fetchEvent = useCallback(async () => {
     try {
       const db = getDbInstance();
       const eventDoc = await getDoc(doc(db, 'events', eventId));
@@ -87,7 +81,13 @@ export default function EditEvent() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [eventId, router]);
+
+  useEffect(() => {
+    if (user) {
+      fetchEvent();
+    }
+  }, [user, fetchEvent]);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
@@ -191,7 +191,7 @@ export default function EditEvent() {
       {/* ヘッダー */}
       <header className="bg-primary-500 text-white p-4 md:p-6 shadow-lg">
         <div className="max-w-6xl mx-auto">
-          <h1 className="text-2xl-mobile md:text-3xl font-bold">📅 予定編集</h1>
+          <h1 className="text-2xl-mobile md:text-3xl font-bold">予定編集</h1>
         </div>
       </header>
 
@@ -297,7 +297,7 @@ export default function EditEvent() {
 
           {/* 添付ファイル */}
           <div className="mb-6 border-t pt-6">
-            <h3 className="text-lg font-bold text-gray-700 mb-3">📎 添付ファイル</h3>
+            <h3 className="text-lg font-bold text-gray-700 mb-3">添付ファイル</h3>
 
             {/* 現在の添付ファイル一覧 */}
             {attachments.length > 0 && (
@@ -308,7 +308,7 @@ export default function EditEvent() {
                     className="flex items-center justify-between p-3 bg-gray-50 rounded-lg border border-gray-200"
                   >
                     <div className="flex items-center gap-3 min-w-0">
-                      <span className="text-2xl flex-shrink-0">📄</span>
+                      <span className="text-base flex-shrink-0 text-gray-500">ファイル</span>
                       <div className="min-w-0">
                         {isSafeAttachmentUrl(att.url) ? (
                           <a

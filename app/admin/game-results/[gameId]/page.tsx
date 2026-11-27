@@ -367,7 +367,7 @@ export default function EditGameResultPage() {
 
           {/* メモ */}
           <div className="bg-white rounded-xl shadow-md p-6">
-            <h2 className="text-xl font-bold text-gray-800 border-b pb-2 mb-4">📝 メモ</h2>
+            <h2 className="text-xl font-bold text-gray-800 border-b pb-2 mb-4">メモ</h2>
             <textarea
               value={notes}
               onChange={e => setNotes(e.target.value)}
@@ -390,7 +390,7 @@ export default function EditGameResultPage() {
               disabled={saving}
               className="flex-1 bg-primary-500 text-white py-4 rounded-xl text-xl font-bold hover:bg-primary-600 transition-colors disabled:opacity-50"
             >
-              {saving ? '保存中...' : '💾 更新する'}
+              {saving ? '保存中...' : '更新する'}
             </button>
           </div>
         </form>

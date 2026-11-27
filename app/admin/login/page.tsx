@@ -21,12 +21,13 @@ export default function AdminLoginPage() {
     try {
       await login(email, password);
       router.push('/admin/dashboard');
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('ログインエラー:', err);
+      const authError = err as { code?: string };
       
-      if (err.code === 'auth/invalid-credential' || err.code === 'auth/user-not-found') {
+      if (authError.code === 'auth/invalid-credential' || authError.code === 'auth/user-not-found') {
         setError('メールアドレスまたはパスワードが間違っています');
-      } else if (err.code === 'auth/too-many-requests') {
+      } else if (authError.code === 'auth/too-many-requests') {
         setError('ログイン試行回数が多すぎます。しばらくしてから再度お試しください');
       } else {
         setError('ログインに失敗しました');
@@ -42,7 +43,7 @@ export default function AdminLoginPage() {
         <div className="bg-white rounded-lg shadow-lg p-8">
           <div className="text-center mb-8">
             <h1 className="text-3xl-mobile font-bold text-gray-800 mb-2">
-              🔐 管理者ログイン
+              管理者ログイン
             </h1>
           </div>
 

@@ -43,7 +43,7 @@ export default function GameResultModal({ game, isOpen, onClose }: GameResultMod
         <div className="p-6 space-y-4">
           {/* 日時 */}
           <div className="bg-gray-50 p-4 rounded-lg">
-            <h3 className="text-xl font-bold mb-2 text-gray-700">📅 試合日</h3>
+            <h3 className="text-xl font-bold mb-2 text-gray-700">試合日</h3>
             <p className="text-lg">
               {format(game.date, 'yyyy年M月d日(E)', { locale: ja })}
             </p>
@@ -121,7 +121,7 @@ export default function GameResultModal({ game, isOpen, onClose }: GameResultMod
           {/* 場所 */}
           {game.location && (
             <div className="bg-gray-50 p-4 rounded-lg">
-              <h3 className="text-xl font-bold mb-2 text-gray-700">📍 会場</h3>
+              <h3 className="text-xl font-bold mb-2 text-gray-700">会場</h3>
               <p className="text-lg">{game.location}</p>
             </div>
           )}
@@ -129,7 +129,7 @@ export default function GameResultModal({ game, isOpen, onClose }: GameResultMod
           {/* メモ */}
           {game.notes && (
             <div className="bg-gray-50 p-4 rounded-lg">
-              <h3 className="text-xl font-bold mb-2 text-gray-700">📝 メモ</h3>
+              <h3 className="text-xl font-bold mb-2 text-gray-700">メモ</h3>
               <p className="text-lg whitespace-pre-wrap">{game.notes}</p>
             </div>
           )}

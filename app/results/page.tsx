@@ -139,7 +139,7 @@ export default function ResultsPage() {
           <Link href="/" className="text-2xl-mobile md:text-3xl font-bold hover:opacity-80">
             ← ホーム
           </Link>
-          <h1 className="text-2xl-mobile md:text-3xl font-bold">🏆 試合結果</h1>
+          <h1 className="text-2xl-mobile md:text-3xl font-bold">試合結果</h1>
         </div>
       </header>
 
@@ -174,7 +174,7 @@ export default function ResultsPage() {
                     {/* 日付・会場 */}
                     <p className="text-gray-500 text-base mb-1">
                       {format(game.date, 'yyyy年M月d日(E)', { locale: ja })}
-                      {game.location && <span className="ml-3">📍 {game.location}</span>}
+                      {game.location && <span className="ml-3">会場: {game.location}</span>}
                     </p>
 
                     <div className="flex items-center justify-between gap-4 flex-wrap">
@@ -260,7 +260,7 @@ export default function ResultsPage() {
                       {/* メモ */}
                       {game.notes && (
                         <div>
-                          <p className="text-base font-bold text-gray-600 mb-1">📝 メモ</p>
+                          <p className="text-base font-bold text-gray-600 mb-1">メモ</p>
                           <p className="text-lg text-gray-700 whitespace-pre-wrap">{game.notes}</p>
                         </div>
                       )}

@@ -115,7 +115,7 @@ export default function EventsManagement() {
         <div className="max-w-6xl mx-auto">
           <div className="flex items-center justify-between gap-2">
             <h1 className="text-xl md:text-3xl font-bold whitespace-nowrap">
-              📅 予定管理
+              予定管理
             </h1>
             <div className="flex gap-2 flex-wrap justify-end">
               {/* 表示切り替え */}
@@ -128,7 +128,7 @@ export default function EventsManagement() {
                       : 'bg-primary-700 text-white hover:bg-primary-800'
                   }`}
                 >
-                  📅 カレンダー
+                  カレンダー
                 </button>
                 <button
                   onClick={() => setViewMode('list')}
@@ -174,7 +174,7 @@ export default function EventsManagement() {
           /* ─── カレンダー表示 ─── */
           <>
             <p className="text-sm text-gray-500 mb-3">
-              💡 予定をタップ → 編集・削除　／　日付の空欄をタップ → 新規追加
+              予定をタップ → 編集・削除　／　日付の空欄をタップ → 新規追加
             </p>
             <Calendar
               events={events}
@@ -201,7 +201,7 @@ export default function EventsManagement() {
                 <div className="text-sm text-gray-600 space-y-0.5 mb-3">
                   <p>🕐 開始：{event.start.toLocaleString('ja-JP', { month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit' })}</p>
                   <p>🕐 終了：{event.end.toLocaleString('ja-JP', { month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit' })}</p>
-                  {event.location && <p>📍 {event.location}</p>}
+                  {event.location && <p>会場: {event.location}</p>}
                 </div>
                 <div className="flex gap-2">
                   <Link
@@ -256,7 +256,7 @@ export default function EventsManagement() {
             <div className="text-sm text-gray-600 space-y-1.5 mb-5">
               <p>🕐 開始：{selectedEvent.start.toLocaleString('ja-JP', { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' })}</p>
               <p>🕐 終了：{selectedEvent.end.toLocaleString('ja-JP', { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' })}</p>
-              {selectedEvent.location && <p>📍 {selectedEvent.location}</p>}
+              {selectedEvent.location && <p>会場: {selectedEvent.location}</p>}
               {selectedEvent.description && (
                 <p className="mt-2 text-gray-500 whitespace-pre-wrap">{selectedEvent.description}</p>
               )}

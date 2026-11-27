@@ -6,6 +6,7 @@ import { getDbInstance } from '@/lib/firebase';
 import Calendar from '@/components/Calendar';
 import EventModal from '@/components/EventModal';
 import Link from 'next/link';
+import { Lightbulb } from 'lucide-react';
 import { Event } from '@/types';
 
 export default function CalendarPage() {
@@ -98,13 +99,10 @@ export default function CalendarPage() {
     <div className="min-h-screen bg-gradient-to-b from-primary-50 to-white">
       {/* ヘッダー */}
       <header className="bg-primary-500 text-white p-6 shadow-lg">
-        <div className="max-w-6xl mx-auto flex items-center justify-between">
+        <div className="max-w-6xl mx-auto flex items-center justify-start">
           <Link href="/" className="text-2xl-mobile md:text-3xl font-bold hover:opacity-80">
             ← ホーム
           </Link>
-          <h1 className="text-2xl-mobile md:text-3xl font-bold">
-            📅 予定カレンダー
-          </h1>
         </div>
       </header>
 
@@ -138,8 +136,9 @@ export default function CalendarPage() {
 
         {/* 注意書き */}
         <div className="mt-6 bg-blue-50 border-l-4 border-primary-500 p-4 rounded">
-          <p className="text-lg text-gray-700">
-            💡 予定をタップすると詳細が表示されます
+          <p className="text-lg text-gray-700 inline-flex items-center gap-2">
+            <Lightbulb size={20} aria-hidden="true" className="text-primary-600" />
+            予定をタップすると詳細が表示されます
           </p>
         </div>
       </main>

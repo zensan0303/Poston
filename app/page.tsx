@@ -7,6 +7,7 @@ import Calendar from '@/components/Calendar';
 import EventModal from '@/components/EventModal';
 import MarqueeBanner from '@/components/MarqueeBanner';
 import Link from 'next/link';
+import { Lightbulb, Mail, Shield, Trophy } from 'lucide-react';
 import { Event } from '@/types';
 
 export default function Home() {
@@ -54,13 +55,13 @@ export default function Home() {
       }
     } catch (error) {
       console.error('イベント取得エラー:', error);
-      const err = error as any;
+      const err = error as { code?: string; message?: string };
       if (err?.code === 'permission-denied') {
-        setError('🔒 権限がありません。Firebaseのセキュリティルールを確認してください。');
+        setError('権限がありません。Firebaseのセキュリティルールを確認してください。');
       } else if (err?.code === 'unavailable') {
-        setError('📡 Firebaseに接続できません。ネットワークを確認してください。');
+        setError('Firebaseに接続できません。ネットワークを確認してください。');
       } else {
-        setError(`⚠️ エラーが発生しました: ${err?.message || '不明'}`);
+        setError(`エラーが発生しました: ${err?.message || '不明'}`);
       }
     }
   };
@@ -81,7 +82,7 @@ export default function Home() {
       <header className="bg-primary-500 text-white p-4 md:p-6 shadow-lg">
         <div className="max-w-6xl mx-auto flex items-center justify-between">
           <h1 className="text-2xl-mobile md:text-3xl font-bold whitespace-nowrap">
-            🥎 ポストン
+            ポストン
           </h1>
           
           {/* メニューボタン（モバイル） */}
@@ -96,21 +97,24 @@ export default function Home() {
           <nav className="hidden md:flex gap-4">
             <Link 
               href="/results"
-              className="bg-white text-primary-600 px-6 py-2 rounded-lg text-lg font-bold hover:bg-gray-100 transition-colors"
+              className="bg-white text-primary-600 px-6 py-2 rounded-lg text-lg font-bold hover:bg-gray-100 transition-colors inline-flex items-center gap-2"
             >
-              🏆 試合結果
+              <Trophy size={20} aria-hidden="true" />
+              試合結果
             </Link>
             <Link 
               href="/contact"
-              className="bg-white text-primary-600 px-6 py-2 rounded-lg text-lg font-bold hover:bg-gray-100 transition-colors"
+              className="bg-white text-primary-600 px-6 py-2 rounded-lg text-lg font-bold hover:bg-gray-100 transition-colors inline-flex items-center gap-2"
             >
-              📧 お問い合わせ
+              <Mail size={20} aria-hidden="true" />
+              お問い合わせ
             </Link>
             <Link 
               href="/admin/login"
-              className="bg-primary-700 text-white px-6 py-2 rounded-lg text-lg font-bold hover:bg-primary-800 transition-colors"
+              className="bg-primary-700 text-white px-6 py-2 rounded-lg text-lg font-bold hover:bg-primary-800 transition-colors inline-flex items-center gap-2"
             >
-              🔐 管理者
+              <Shield size={20} aria-hidden="true" />
+              管理者
             </Link>
           </nav>
         </div>
@@ -120,24 +124,33 @@ export default function Home() {
           <div className="md:hidden mt-4 space-y-2">
             <Link 
               href="/results"
-              className="block bg-white text-primary-600 px-6 py-3 rounded-lg text-xl font-bold hover:bg-gray-100 transition-colors text-center"
+              className="block bg-white text-primary-600 px-6 py-3 rounded-lg text-xl font-bold hover:bg-gray-100 transition-colors"
               onClick={() => setMenuOpen(false)}
             >
-              🏆 試合結果
+              <span className="inline-flex items-center justify-center gap-2 w-full">
+                <Trophy size={20} aria-hidden="true" />
+                試合結果
+              </span>
             </Link>
             <Link 
               href="/contact"
-              className="block bg-white text-primary-600 px-6 py-3 rounded-lg text-xl font-bold hover:bg-gray-100 transition-colors text-center"
+              className="block bg-white text-primary-600 px-6 py-3 rounded-lg text-xl font-bold hover:bg-gray-100 transition-colors"
               onClick={() => setMenuOpen(false)}
             >
-              📧 お問い合わせ
+              <span className="inline-flex items-center justify-center gap-2 w-full">
+                <Mail size={20} aria-hidden="true" />
+                お問い合わせ
+              </span>
             </Link>
             <Link 
               href="/admin/login"
-              className="block bg-primary-700 text-white px-6 py-3 rounded-lg text-xl font-bold hover:bg-primary-800 transition-colors text-center"
+              className="block bg-primary-700 text-white px-6 py-3 rounded-lg text-xl font-bold hover:bg-primary-800 transition-colors"
               onClick={() => setMenuOpen(false)}
             >
-              🔐 管理者ログイン
+              <span className="inline-flex items-center justify-center gap-2 w-full">
+                <Shield size={20} aria-hidden="true" />
+                管理者ログイン
+              </span>
             </Link>
           </div>
         )}
@@ -148,10 +161,6 @@ export default function Home() {
 
       {/* メインコンテンツ */}
       <main className="max-w-6xl mx-auto p-4 md:p-8">
-        <h2 className="text-2xl-mobile md:text-3xl font-bold mb-4 text-center text-gray-800">
-          📅 予定カレンダー
-        </h2>
-
         {/* エラー表示 */}
         {error && (
           <div className="mb-6 bg-orange-50 border-l-4 border-orange-500 p-4 rounded">
@@ -183,8 +192,9 @@ export default function Home() {
 
         {/* 注意書き */}
         <div className="mt-6 bg-blue-50 border-l-4 border-primary-500 p-4 rounded">
-          <p className="text-lg text-gray-700">
-            💡 予定をタップすると詳細が表示されます
+          <p className="text-lg text-gray-700 inline-flex items-center gap-2">
+            <Lightbulb size={20} aria-hidden="true" className="text-primary-600" />
+            予定をタップすると詳細が表示されます
           </p>
         </div>
       </main>
